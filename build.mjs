@@ -407,7 +407,9 @@ function renderAdSlot(slotId, ctx) {
   ctx.usedAdSlots.add(slotId);
   ctx.stats.adSlots++;
 
-  const program = slot.program || '【要記入】案件名';
+  // program が未設定でも本文には出ない（--drafts のプレースホルダと HTML コメントにだけ使う）。
+  // ここは「埋めるべき空欄」ではなくコードの既定値なので 【要記入】 は使わない。
+  const program = slot.program || '（案件名の記載なし）';
   const note = slot.note || '';
 
   // --- (1) ASP のタグが入っている枠：タグをそのまま（エスケープせずに）出す ---
@@ -630,6 +632,19 @@ function loadSite() {
   site.homeLatestCount = homeCount(site.homeLatestCount, 12, 'homeLatestCount');
   site.homeUpdatedCount = homeCount(site.homeUpdatedCount, 8, 'homeUpdatedCount');
   site.adDisclosure = site.adDisclosure || '本記事にはアフィリエイト広告（プロモーション）が含まれます。';
+
+  // --- /about/ ・ /policy/ の表記に使う値 ---------------------------------
+  // 本人にしか書けないもの（contactEmail・運営者名・所在地）は
+  // 【要記入】 のまま残してある。content/site.json の _memo_* を参照。
+  site.siteStarted = site.siteStarted || '【要記入】';
+  site.policyEstablished = site.policyEstablished || '【要記入】';
+  site.policyUpdated = site.policyUpdated || site.policyEstablished || '【要記入】';
+  // 未導入なら空文字。空のあいだは /policy/ が「導入していない」と表示する。
+  site.analyticsTool = String(site.analyticsTool || '').trim();
+  // 提携が承認され、実際に広告を掲載している ASP だけを aspApproved に入れる。
+  site.aspApplied = Array.isArray(site.aspApplied) ? site.aspApplied : [];
+  site.aspApproved = Array.isArray(site.aspApproved) ? site.aspApproved : [];
+
   return site;
 }
 
@@ -1272,6 +1287,12 @@ ${breadcrumb(crumbs)}
 }
 
 function buildAbout(site) {
+  // ---- 本人にしか書けない項目 --------------------------------------------
+  // 運営者名: ハンドルネームで可。buildPolicy() の ownerName と必ず同じ表記にする。
+  // 埋めたら 【要記入】 を実際の名前に置き換えるだけでよい。
+  const ownerName = '【要記入】';
+  // 連絡先は content/site.json の "contactEmail"（埋め方は同ファイルの _memo_contactEmail）。
+  // 運営開始は content/site.json の "siteStarted"。
   const crumbs = [
     { label: 'ホーム', href: '/' },
     { label: 'サイトについて', href: '/about/' },
@@ -1304,9 +1325,9 @@ ${breadcrumb(crumbs)}
 
 <h2 id="h-5">運営者</h2>
 <ul>
-  <li>運営者名: 【要記入】</li>
+  <li>運営者名: ${esc(ownerName)}</li>
   <li>連絡先: ${esc(site.contactEmail || '【要記入】')}</li>
-  <li>運営開始: 【要記入】</li>
+  <li>運営開始: ${esc(site.siteStarted)}</li>
 </ul>
 </div>
 </article>
@@ -1322,7 +1343,61 @@ ${breadcrumb(crumbs)}
   });
 }
 
+// /policy/ の「利用しているASP」の段落。
+// 提携が承認されるまでは「利用しています」と断定しない。
+// content/site.json の aspApproved / aspApplied で切り替わる。
+function aspParagraph(site) {
+  const jp = (list) => list.map((x) => esc(String(x))).join('、');
+  if (site.aspApproved.length) {
+    const rest = site.aspApplied.filter((x) => !site.aspApproved.includes(x));
+    const applying = rest.length
+      ? `また、${jp(rest)}については提携を申請中で、承認され次第この項目に追記します。`
+      : '';
+    return `<p>当サイトが利用しているアフィリエイトサービスプロバイダ: ${jp(site.aspApproved)}。${applying}</p>`;
+  }
+  if (site.aspApplied.length) {
+    return (
+      `<p>当サイトは、${jp(site.aspApplied)}の各アフィリエイトサービスプロバイダへの参加を予定しています。` +
+      `ただし本ページの最終改定日の時点では、いずれについても提携（広告掲載）の承認を受けておらず、` +
+      `記事内に広告タグを掲載していません。提携が承認され、実際に広告の掲載を始めた時点で、` +
+      `この項目を実際に利用しているASP名に更新します。</p>`
+    );
+  }
+  return '<p>本ページの最終改定日の時点では、アフィリエイトサービスプロバイダとの提携はありません。</p>';
+}
+
+// /policy/ のアクセス解析の段落。
+// content/site.json の analyticsTool が空のあいだは「導入していない」と書く。
+// 導入していないのに「Google アナリティクスを使用しています」と書かないための分岐。
+function analyticsParagraphs(site) {
+  if (!site.analyticsTool) {
+    return (
+      `<p>当サイトのページは、アクセス解析ツール・外部フォント・CDN などの外部スクリプトを読み込まない作りにしています。` +
+      `本ページの最終改定日の時点では<strong>アクセス解析ツールを導入しておらず</strong>、` +
+      `当サイト自身のページとスクリプトは Cookie を使用していません。</p>\n` +
+      `<p>今後アクセス解析ツールを導入する場合は、この項目に利用するツール名と Cookie の使用の有無を明記したうえで運用します。</p>`
+    );
+  }
+  return (
+    `<p>当サイトでは、アクセス状況の把握のために ${esc(site.analyticsTool)} を利用しています。` +
+    `このツールはアクセスデータの収集のために Cookie を使用することがありますが、` +
+    `収集されるのは閲覧されたページ・参照元・利用環境などの情報で、氏名や住所など個人を特定する情報は含まれません。</p>\n` +
+    `<p>収集したデータは、記事の改善のためだけに利用します。</p>`
+  );
+}
+
 function buildPolicy(site) {
+  // ---- 本人にしか書けない項目 --------------------------------------------
+  // 運営者名: ハンドルネームで可。buildAbout() の ownerName と必ず同じ表記にする。
+  const ownerName = '【要記入】';
+  // 所在地: 特定商取引法まわりで本人の情報が要る箇所。
+  //   個人の場合、都道府県までの記載＋「請求があった場合に遅滞なく開示します」の
+  //   但し書きで運用する例が多いが、どこまで書くかは本人が決めること
+  //   （docs/launch-checklist.md #10 / #15）。
+  const ownerAddress = '【要記入】';
+  // 連絡先は content/site.json の "contactEmail"。
+  // 制定日・最終改定日は content/site.json の "policyEstablished" / "policyUpdated"。
+  //   このページの文面を直したら policyUpdated を必ず更新すること。
   const crumbs = [
     { label: 'ホーム', href: '/' },
     { label: '運営者情報・免責', href: '/policy/' },
@@ -1339,45 +1414,52 @@ ${breadcrumb(crumbs)}
 <h2 id="h-1">運営者情報</h2>
 <ul>
   <li>サイト名: ${esc(site.name)}</li>
-  <li>運営者名（ハンドルネーム可）: 【要記入】</li>
-  <li>所在地: 【要記入】（法令上の請求があった場合に遅滞なく開示します）</li>
+  <li>運営者名（ハンドルネーム可）: ${esc(ownerName)}</li>
+  <li>所在地: ${esc(ownerAddress)}（法令上の請求があった場合に遅滞なく開示します）</li>
   <li>連絡先: ${esc(site.contactEmail || '【要記入】')}</li>
-  <li>お問い合わせ方法: 【要記入】（メールフォームを設置する場合はここにリンク）</li>
+  <li>お問い合わせ方法: 上記のメールアドレス宛にご連絡ください。メールフォームは設置していません。</li>
 </ul>
 
-<h2 id="h-2">広告・アフィリエイトプログラムについて（ステマ規制対応）</h2>
-<p>当サイトは、アフィリエイトプログラムを利用した広告を掲載しています。記事内のリンクを経由してサービスの申し込みや購入があった場合、当サイトは広告主から成果報酬を受け取ることがあります。</p>
-<p>広告を含む記事には、記事の冒頭に「${esc(site.adDisclosure)}」と明示しています。これは景品表示法（いわゆるステルスマーケティング規制）に基づく表示です。</p>
-<p>利用しているアフィリエイトサービスプロバイダ: A8.net、もしもアフィリエイト、afb（【要記入】：実際に利用しているものに合わせて修正してください）</p>
+<h2 id="h-2">広告・アフィリエイトプログラムについて（ステルスマーケティング規制への対応）</h2>
+<p>当サイトは、アフィリエイトプログラムを利用した広告を掲載する方針で運営しています。記事内の広告リンクを経由してサービスの申し込みや契約があった場合、当サイトは広告主またはアフィリエイトサービスプロバイダから成果報酬を受け取ることがあります。</p>
+<p>広告を含む記事には、<strong>記事の冒頭（タイトルのすぐ下）に、本文と同じ大きさの文字で「${esc(site.adDisclosure)}」と表示</strong>しています。同じ文言をページ下部にも掲載し、実際の広告枠には「広告」のラベルを付けています。</p>
+<p>これは、景品表示法にもとづく指定告示「一般消費者が事業者の表示であることを判別することが困難である表示」（令和5年10月1日施行。いわゆるステルスマーケティング規制）と、消費者庁が公表している同告示の運用基準をふまえた表示です。運用基準では、事業者の表示であることを明瞭にする方法として「広告」「宣伝」「プロモーション」「PR」といった文言による表示が挙げられており、反対に、視認しにくい末尾の位置に置くこと、周囲の文字より小さく表示すること、大量のハッシュタグの中に埋もれさせることは、明瞭とはいえない方法として示されています。当サイトはこれに合わせ、読者が本文を読み始める前に必ず目に入る位置に、本文と同じ大きさで表示しています。</p>
+${aspParagraph(site)}
 <p>報酬の有無や金額によって、評価やおすすめ順を操作することはありません。掲載順は「その試合・番組を実際に視聴できるか」「料金と条件が明確か」を基準にしています。</p>
+<p class="note">参照: 消費者庁「令和5年10月1日からステルスマーケティングは景品表示法違反となります」<a href="https://www.caa.go.jp/policies/policy/representation/fair_labeling/stealth_marketing/" rel="nofollow noopener" target="_blank">https://www.caa.go.jp/policies/policy/representation/fair_labeling/stealth_marketing/</a>、および同告示の運用基準（PDF）<a href="https://www.caa.go.jp/policies/policy/representation/fair_labeling/guideline/assets/representation_cms216_230328_03.pdf" rel="nofollow noopener" target="_blank">https://www.caa.go.jp/policies/policy/representation/fair_labeling/guideline/assets/representation_cms216_230328_03.pdf</a>（いずれも2026年9月15日確認）。</p>
 
 <h2 id="h-3">情報の正確性について</h2>
-<p>記事の内容は、公開・更新の時点で各サービスの公式ページ等を確認して作成しています。ただし、配信権・料金プラン・無料期間・対応デバイスは予告なく変更される場合があります。</p>
-<p>各記事には最終更新日と、情報を確認した時点を明記しています。申し込みや契約の前には、必ず公式サイトで最新の条件をご確認ください。</p>
-<p>誤りを見つけられた場合は、上記の連絡先までお知らせいただけると助かります。確認のうえ、速やかに訂正します。</p>
+<p>当サイトの記事は、<strong>各配信サービス・各リーグ・各主催者の公式ページで確認できた内容だけ</strong>を書く方針で作成しています。料金・配信予定・無料期間・対応デバイスなどの数値や条件には、記事末尾に出典として確認元のページへのリンクを掲載し、本文中の該当箇所からその出典を参照できるようにしています。公式ページで確認が取れなかったことは書かず、確認中の項目は「未確認」と明記します。</p>
+<p>各記事には、公開日・最終更新日と、その情報をいつ時点で確認したかを明記しています。<strong>更新日は、その日に実際に公式ページで確認し直したときだけ更新</strong>しています。</p>
+<p>ただし、配信権・料金プラン・無料期間・対応デバイスは予告なく変更される場合があります。当サイトは、確認した時点の内容が申し込み時点でも有効であることを保証するものではありません。<strong>申し込みや契約の前には、必ず各サービスの公式サイトで最新の条件をご確認ください。</strong></p>
+<p>記載の誤りや、すでに古くなっている内容を見つけられた場合は、上記の連絡先までお知らせいただけると助かります。公式ページで確認のうえ、速やかに訂正し、更新日を書き換えます。</p>
 
 <h2 id="h-4">免責事項</h2>
 <ul>
+  <li>当サイトの記事は、記載の確認日時点で各社の公式ページを確認して作成したものです。その後の変更によって内容が実際と異なっていた場合でも、運営者は責任を負いかねます。</li>
   <li>当サイトの情報を利用したことによって生じたいかなる損害についても、運営者は責任を負いかねます。</li>
   <li>当サイトから移動した先のサイト（広告主・配信サービス等）で提供される情報・サービスについては、各提供元が責任を負うものとします。</li>
   <li>各サービスの契約・解約・支払いに関するトラブルは、各サービスの窓口へお問い合わせください。</li>
 </ul>
 
 <h2 id="h-5">著作権について</h2>
-<p>当サイトに掲載している文章の著作権は運営者に帰属します。引用の範囲を超える無断転載はご遠慮ください。引用される場合は、出典として当サイトへのリンクを明記してください。</p>
-<p>各リーグ・チーム・配信サービスの名称およびロゴは、各権利者に帰属します。</p>
+<p>当サイトに掲載している文章・表・構成の著作権は、${esc(site.name)}の運営者に帰属します。</p>
+<p>著作権法上の引用の要件を満たす範囲での引用は自由に行っていただけます。その場合は、引用部分がわかるように区別したうえで、出典として当サイトの名称と該当ページの URL を明記してください。<strong>引用の範囲を超える無断転載・複製・改変・再配布はお断りします。</strong>記事の全文または大部分の転載をご希望の場合は、上記の連絡先までご相談ください。</p>
+<p>当サイトが記事末尾に掲載している出典リンクは、各社・各団体の公式ページを参照しているものです。リンク先の内容の著作権は、各リンク先の権利者に帰属します。</p>
+<p>各リーグ・クラブ・チーム・大会・配信サービスの名称およびロゴは、それぞれの権利者の商標または登録商標です。当サイトはこれらの権利者とは関係のない、独立した個人運営のサイトです。</p>
 
 <h2 id="h-6">アクセス解析・Cookie について</h2>
-<p>当サイトでは、アクセス状況の把握のためにアクセス解析ツールを利用する場合があります（【要記入】：利用するツール名。利用しない場合はこの項目を削除してください）。これらのツールは Cookie を使用してデータを収集することがありますが、個人を特定する情報は含まれません。</p>
-<p>ブラウザの設定により Cookie を無効にすることができます。</p>
+${analyticsParagraphs(site)}
+<p>記事内に掲載する広告（アフィリエイトタグ）や、広告リンク・出典リンクから移動した先のサイトでは、それぞれの事業者の方針にしたがって Cookie が使用されることがあります。その取り扱いについては、各社のプライバシーポリシーをご確認ください。</p>
+<p>Cookie は、お使いのブラウザの設定でいつでも無効にできます。</p>
 
 <h2 id="h-7">個人情報の取り扱い</h2>
 <p>お問い合わせいただいた際にお預かりした個人情報は、返信および内容の確認以外の目的では利用しません。第三者への提供は、法令に基づく場合を除き行いません。</p>
 
 <h2 id="h-8">制定・改定</h2>
 <ul>
-  <li>制定日: 【要記入】</li>
-  <li>最終改定日: 【要記入】</li>
+  <li>制定日: ${esc(site.policyEstablished)}</li>
+  <li>最終改定日: ${esc(site.policyUpdated)}</li>
 </ul>
 </div>
 </article>

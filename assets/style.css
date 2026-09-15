@@ -751,3 +751,12 @@ mark {
   .ad-slot { border-color: #999; background: #fff; }
   .ad-unit { border-color: #999; background: #fff; }
 }
+
+/* /policy/ ・ /about/ の出典・注記（本文より一段小さく、控えめな色にする） */
+.article__body p.note {
+  color: var(--text-muted);
+  font-size: 0.85em;
+  line-height: 1.8;
+  word-break: break-all;
+}
+.article__body p.note a { word-break: break-all; }
