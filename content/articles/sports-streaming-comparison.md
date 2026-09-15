@@ -68,6 +68,16 @@ sources:
     url: https://prtimes.jp/main/html/rd/p/000000007.000160617.html
   - label: NHK｜日本放送協会 プレスリリース「「NHK ONE」サービス開始から半年 最新状況と「NHK オンデマンド」との連携について」
     url: https://prtimes.jp/main/html/rd/p/000000048.000160617.html
+  - label: DAZN公式プレスルーム「DAZN独占：11/19 AFCアジア最終予選 中国vs日本」
+    url: https://dazngroup.com/press-room/1118/
+  - label: DAZN公式プレスルーム「「DAZN BASEBALL」初月無料キャンペーンで開幕前の熱狂をお得に体験」
+    url: https://dazngroup.com/press-room/260216/
+  - label: 株式会社SPOTV JAPAN プレスリリース「【SPOTV NOW】MLB開幕に向けた早期割引キャンペーンを実施」
+    url: https://prtimes.jp/main/html/rd/p/000000044.000075946.html
+  - label: 株式会社SPOTV JAPAN プレスリリース「テレビ機能が追加されたプレミアムプラン」
+    url: https://prtimes.jp/main/html/rd/p/000000026.000075946.html
+  - label: About Amazon Japan「Amazonプライム会員のメリット」
+    url: https://www.aboutamazon.jp/news/amazon-prime/prime-membership-seven-benefits
 ad_slots:
   - id: slot-hero
     program: ABEMAプレミアム（afb）
@@ -150,18 +160,18 @@ ad_slots:
 
 J SPORTSオンデマンドのジャンルパックについては、公式が「月額2,580円（税込）（ジャンルによって料金が異なるサービスもございます）」と注記しています::source{24}。**サッカーのジャンルパックがこの金額なのかは、購入ページで自分の目で確認してください。**
 
-### 料金を公式で確認できなかったサービス
+### 公式サイト本体に到達できなかったサービス
 
-次の4つは、今回の調査で**月額の金額を確認できませんでした。** 推測の数字を置くよりも、公式リンクだけを出すほうが読者の損が小さいと判断しています。**NHKだけは、名称と利用条件をNHK自身のリリースで確認できた**ので、その範囲で書いています。
+次の4つは、**利用者向けの公式サイト本体を今回の調査で開けませんでした。** ただし、**DAZN・SPOTV NOW・Amazon Prime Video については、各社自身が別の場所（コーポレートサイトの告知・自社のプレスリリース・自社の広報サイト）に出している金額を確認できました。** 金額の出どころが利用者向けの申し込みページではないので、**申し込む前に必ず公式リンクで最新の金額を確認してください。**
 
 | サービス名 | 月額（税込） | 状況 | 公式リンク |
 | --- | --- | --- | --- |
-| DAZN（本体・直接契約） | 公式で要確認 | 料金ページを確認できなかった。Jリーグの配信範囲のみJリーグ公式で確認済み::source{26} | [DAZN公式](https://www.dazn.com/ja-JP/) |
-| SPOTV NOW | 公式で要確認 | 公式サイトに到達できなかった | [SPOTV NOW公式](https://www.spotvnow.jp/) |
-| Amazon Prime Video | 公式で要確認 | 公式ページの取得が許可されていなかった | [Amazon Prime公式](https://www.amazon.co.jp/prime) |
+| DAZN（本体・直接契約） | DAZN Standard 4,200円（**税込の明記なし**）::source{31}／DAZN BASEBALL 2,300円・年間27,600円::source{32} | 利用者向けの料金ページには到達できなかったが、**DAZN自身のコーポレートサイトの告知**で金額を確認::source{31}::source{32}。**4,200円は2024年11月の告知にある金額**です。同時視聴数・対応デバイス・常設の無料お試しは未確認。Jリーグの配信範囲のみJリーグ公式で確認済み::source{26} | [DAZN公式](https://www.dazn.com/ja-JP/) |
+| SPOTV NOW | ベーシック 2,000円／プレミアム 3,000円（年間はベーシック18,000円・プレミアム27,000円）::source{33} | 公式サイトはJavaScriptで描画されていて本文を取得できないが、**SPOTV JAPAN自身のリリース**で金額を確認::source{33}。同時視聴は**手元の1台＋テレビ1台の計2台**（2024年1月の自社リリース時点）::source{34} | [SPOTV NOW公式](https://www.spotvnow.jp/) |
+| Amazon Prime Video | プライム会費として月600円／年5,900円::source{35} | `amazon.co.jp` は取得が許可されていないが、**Amazon自身の広報サイト**で会費を確認::source{35}。Prime Student は月300円／年2,950円::source{35}。**同時視聴数と対応デバイスの一覧は未確認** | [Amazon Prime公式](https://www.amazon.co.jp/prime) |
 | NHK ONE | 公式で要確認 | 現行の正式名称は「NHK ONE」（2025年10月1日開始・「NHKプラス」の後継）::source{29}。利用には受信契約が必要で、契約済みの世帯は追加の契約や負担は不要::source{30}。**受信料そのものの金額は今回確認していない** | [NHK公式](https://www.nhk.jp/) |
 
-**NHKだけは、金額以外が分かっています。** NHKのインターネットサービスは2025年10月1日から**「NHK ONE」**という名称で提供されており、これは「NHKプラス」の後継にあたります::source{29}。利用には**受信契約が必要**ですが、「すでに契約済みの世帯は追加の契約やご負担は不要」とNHK自身が案内しています::source{30}。見逃し配信は**放送から1週間**です::source{30}。なお、**スマホ・タブレット用アプリの名前は「NHKプラス」のまま**です::source{29}。**受信料そのものの金額は今回確認していない**ので、そこは公式で確認してください。
+**NHK ONE だけは、金額以外が分かっています。** NHKのインターネットサービスは2025年10月1日から**「NHK ONE」**という名称で提供されており、これは「NHKプラス」の後継にあたります::source{29}。利用には**受信契約が必要**ですが、「すでに契約済みの世帯は追加の契約やご負担は不要」とNHK自身が案内しています::source{30}。見逃し配信は**放送から1週間**です::source{30}。なお、**スマホ・タブレット用アプリの名前は「NHKプラス」のまま**です::source{29}。**受信料そのものの金額は今回確認していない**ので、そこは公式で確認してください。
 
 ::ad{id=slot-compare}
 

@@ -6,7 +6,7 @@ role: hub
 target_keyword: 配信 テレビで見る 方法
 search_intent: 手持ちの機器で見られるか、無ければ何を買えばいいかを決めたい
 published: 2026-09-10
-updated: 2026-09-10
+updated: 2026-09-15
 sources:
   - label: NTTドコモ公式「DAZN for docomo」
     url: https://www.docomo.ne.jp/service/dazn/
@@ -71,6 +71,12 @@ sources:
   - label: ABEMA公式ヘルプ「視聴プランの料金改定について」
     url: https://help.abema.tv/hc/ja/articles/55297041707545
     note: ABEMAプレミアム・広告つきABEMAプレミアムの月額と改定日
+  - label: 株式会社SPOTV JAPAN プレスリリース「テレビ機能が追加されたプレミアムプラン」
+    url: https://prtimes.jp/main/html/rd/p/000000026.000075946.html
+    note: テレビの対応機器（Android TV搭載スマートTV・Fire TV Stick・Apple TV・Chromecast）と同時視聴の台数
+  - label: App Store「SPOTV NOW」（販売元 SPOTV JAPAN, K.K.）
+    url: https://apps.apple.com/jp/app/spotv-now/id1494645317
+    note: 対応欄のApple TV（tvOS 16.0以降）
 ad_slots:
   - id: slot-compare
     program: スカパー！（もしもアフィリエイト）
@@ -87,13 +93,13 @@ ad_slots:
 
 「スマホでは見られるのに、テレビの大画面に出せない」——配信サービスで最も起きやすい取り違えがこれです。**契約してから機器を買い足すことになると、月額とは別に数千円の出費が出ます。** サービスを決める前に、テレビに何をつなぐかを先に決めてください。
 
-この記事は、**サービスの側ではなく機器の側から**整理します。並べているのは各社の公式ページで対応機器を確認できたものだけです。確認できなかった項目は空欄にせず「記載なし」と書きました。**「記載なし」は「使えない」という意味ではありません。** 今回参照した公式ページにその機器名を確認できなかった、という意味です。
+この記事は、**サービスの側ではなく機器の側から**整理します。並べているのは各社の公式ページで対応機器を確認できたものだけです（**SPOTV NOW だけは公式サイトが読めないため、SPOTV JAPAN 自身のプレスリリースで確認しました**）。確認できなかった項目は空欄にせず「記載なし」と書きました。**「記載なし」は「使えない」という意味ではありません。** 今回参照した公式ページにその機器名を確認できなかった、という意味です。
 
 ## 結論：Fire TV がいちばん外れにくい
 
-今回調べた10サービスのうち、**Amazon Fire TV は10サービスすべての公式ページで名前を確認できた唯一の機器**でした::source{1}::source{2}::source{4}::source{7}::source{9}::source{12}::source{14}::source{16}::source{18}::source{20}。
+今回調べた11サービスのうち、**Amazon Fire TV は11サービスすべてで名前を確認できた唯一の機器**でした::source{1}::source{2}::source{4}::source{7}::source{9}::source{12}::source{14}::source{16}::source{18}::source{20}::source{22}。
 
-対して **Apple TV は、公式の対応機器一覧に名前を確認できたのが5サービス**にとどまりました（DAZN for docomo::source{1}、ABEMA::source{2}、Hulu::source{9}、WOWOWオンデマンド::source{12}、パ・リーグTV::source{18}）。残る5サービスのページでは記載を確認できていません::source{4}::source{7}::source{14}::source{16}::source{20}。
+対して **Apple TV は、対応機器の一覧に名前を確認できたのが6サービス**にとどまりました（DAZN for docomo::source{1}、ABEMA::source{2}、Hulu::source{9}、WOWOWオンデマンド::source{12}、パ・リーグTV::source{18}、SPOTV NOW::source{22}::source{23}）。残る5サービスのページでは記載を確認できていません::source{4}::source{7}::source{14}::source{16}::source{20}。
 
 **Apple TV を持っている人は、契約前にそのサービスの対応機器ページを必ず開いてください。** これから機器を買うなら、Fire TV かスマートテレビの内蔵アプリが安全側です。
 
@@ -113,13 +119,15 @@ ad_slots:
 | J SPORTSオンデマンド | ○ Android TV／Google TV::source{16} | ○::source{16} | ○::source{16} | 記載なし::source{16} | 記載なし::source{16} | 2台::source{17} |
 | パ・リーグTV | ○ Android TV::source{18} | ○::source{18} | 記載なし::source{18} | ○::source{18} | 記載なし::source{18} | 複数端末での同時視聴は不可::source{19} |
 | Lemino | ○::source{20} | ○ Fire TV Stick::source{20} | ○ Chromecast with Google TV::source{20} | 記載なし::source{20} | 記載なし::source{20} | 公式で要確認 |
+| SPOTV NOW | ○ Android TV搭載スマートTV::source{22} | ○ Fire TV Stick::source{22} | ○::source{22} | ○::source{22}::source{23} | 記載なし::source{22} | 2台（手元の1台＋テレビ1台）::source{22} |
+
+**SPOTV NOW の行だけは出どころが違います。** 公式サイトが JavaScript で描画されていて読めないため、**SPOTV JAPAN 自身が2024年1月26日に出したリリース**で確認しました::source{22}。同リリースは「スマートフォン/タブレット/PCのいずれか1台とテレビ端末での2台同時視聴が可能」としており、**同じ種類の端末を2台ではなく「手元の1台＋テレビ1台」という組み合わせ**です::source{22}。また**その時点で TVアプリはβ版**と注記されています::source{22}。Apple TV については、2026-09-15 時点の App Store の掲載情報（tvOS 16.0以降）でも確認できます::source{23}。
 
 今回、対応機器を確認できなかったサービスもあります。**推測は書かず、公式リンクだけを置きます。**
 
 | サービス名 | 対応機器 | 公式リンク |
 | --- | --- | --- |
 | DAZN（本体・直接契約） | 公式で要確認 | [DAZN公式](https://www.dazn.com/ja-JP/) |
-| SPOTV NOW | 公式で要確認 | [SPOTV NOW公式](https://www.spotvnow.jp/) |
 | Amazon Prime Video | 公式で要確認 | [Amazon Prime公式](https://www.amazon.co.jp/prime) |
 
 ::ad{id=slot-compare}
@@ -128,21 +136,21 @@ ad_slots:
 
 ### Fire TV — 迷ったらこれ
 
-Amazon Fire TV は、今回の10サービスすべての公式ページで名前を確認できました。ただし**世代とOSの条件が付きます。** ABEMAは「2019年以降・Fire OS 6以上」::source{2}、J SPORTSオンデマンドは「Fire OS 6以降」かつ日本国内で販売された製品::source{16}が条件です。**家に転がっている古い Fire TV Stick がそのまま使えるとは限りません。**
+Amazon Fire TV は、今回の11サービスすべてで名前を確認できました。ただし**世代とOSの条件が付きます。** ABEMAは「2019年以降・Fire OS 6以上」::source{2}、J SPORTSオンデマンドは「Fire OS 6以降」かつ日本国内で販売された製品::source{16}が条件です。**家に転がっている古い Fire TV Stick がそのまま使えるとは限りません。**
 
 ### Chromecast — 「テレビにアプリを入れる」のではなく「スマホから飛ばす」
 
-Chromecast は8サービスで記載を確認できました。ただし仕組みが他と違います。J SPORTSオンデマンドは「スマートフォン・タブレットのアプリまたはブラウザからキャストする」形での対応です::source{16}。**テレビ側だけで完結せず、手元のスマホを操作し続ける**ことになります。
+Chromecast は9サービスで記載を確認できました。ただし仕組みが他と違います。J SPORTSオンデマンドは「スマートフォン・タブレットのアプリまたはブラウザからキャストする」形での対応です::source{16}。**テレビ側だけで完結せず、手元のスマホを操作し続ける**ことになります。
 
 一方、Lemino が挙げている Chromecast with Google TV::source{20}のように Google TV を積んだ機種は、テレビ側にアプリを入れて単独で動きます。**同じ「Chromecast」でも世代で使い勝手が変わります。**
 
 ### Apple TV — 対応が落ちるサービスがある
 
-記載を確認できたのは5サービスです。ABEMAは「第4世代以降、tvOS 16.0以降」という条件付きです::source{2}。**iPhone を使っているから Apple TV、という選び方は、配信サービスの対応という一点では不利になることがあります。**
+記載を確認できたのは6サービスです。ABEMAは「第4世代以降、tvOS 16.0以降」という条件付きです::source{2}。**iPhone を使っているから Apple TV、という選び方は、配信サービスの対応という一点では不利になることがあります。**
 
 ### スマートテレビの内蔵アプリ — 追加の機器を買わずに済む
 
-10サービスすべてが、何らかの形でテレビ内蔵アプリに対応しています。ただし**対応するのは「そのメーカーの、その年式のモデル」だけ**です。WOWOWオンデマンドは Sony BRAVIA・シャープ AQUOS・パナソニック ビエラ・TVS REGZA・FUNAI・LG・Hisense の機種名を挙げて公開しており::source{12}、TVerもメーカーと発売年で対応機種を列挙しています::source{4}。
+11サービスすべてが、何らかの形でテレビ内蔵アプリに対応しています。ただし**対応するのは「そのメーカーの、その年式のモデル」だけ**です。WOWOWオンデマンドは Sony BRAVIA・シャープ AQUOS・パナソニック ビエラ・TVS REGZA・FUNAI・LG・Hisense の機種名を挙げて公開しており::source{12}、TVerもメーカーと発売年で対応機種を列挙しています::source{4}。
 
 **まず自分のテレビの型番を調べて、この一覧に入っているかを確認してください。** 入っていれば追加の機器はいりません。
 
@@ -155,7 +163,7 @@ PlayStation・Xbox は DAZN for docomo::source{1}、PlayStation 5 は TVer::sour
 順番で考えます。
 
 1. **テレビの型番を調べる。** 各社の対応機種一覧に自分のテレビがあれば、買うものはありません::source{4}::source{12}
-2. **無ければ Fire TV。** 10サービスすべてで記載を確認できたのはこれだけです。世代とOSの条件があるので**新しい世代を選ぶ**のが無難です::source{2}::source{16}
+2. **無ければ Fire TV。** 11サービスすべてで記載を確認できたのはこれだけです。世代とOSの条件があるので**新しい世代を選ぶ**のが無難です::source{2}::source{16}
 3. **ゲーム機があるなら、まずそれで試す**::source{1}::source{2}::source{4}::source{9}
 4. **Apple TV は、見たいサービスが決まっている場合だけ**
 
@@ -199,7 +207,7 @@ Fire TV などのストリーミングデバイスをHDMI端子につなげば�
 
 ### Apple TV を持っています。どのサービスが使えますか
 
-今回、公式ページで Apple TV の記載を確認できたのは DAZN for docomo::source{1}、ABEMA::source{2}、Hulu::source{9}、WOWOWオンデマンド::source{12}、パ・リーグTV::source{18}の5つです。TVer・U-NEXT・スカパー！番組配信・J SPORTSオンデマンド・Lemino については、今回参照した公式ページで記載を確認できませんでした。**「使えない」と断定はできないので、契約前に各社の対応機器ページで確認してください。**
+今回、Apple TV の記載を確認できたのは DAZN for docomo::source{1}、ABEMA::source{2}、Hulu::source{9}、WOWOWオンデマンド::source{12}、パ・リーグTV::source{18}、SPOTV NOW::source{22}::source{23}の6つです。TVer・U-NEXT・スカパー！番組配信・J SPORTSオンデマンド・Lemino については、今回参照した公式ページで記載を確認できませんでした。**「使えない」と断定はできないので、契約前に各社の対応機器ページで確認してください。**
 
 ### 機器を買えば、どのサービスも必ず見られますか
 
@@ -211,7 +219,7 @@ Fire TV などのストリーミングデバイスをHDMI端子につなげば�
 
 ## まとめ
 
-- **迷ったら Fire TV。** 10サービスすべてで記載を確認できた唯一の機器です
+- **迷ったら Fire TV。** 11サービスすべてで記載を確認できた唯一の機器です
 - **Apple TV は5サービスのみ確認。** 契約前に各社の対応機器ページを開く
 - **まず自分のテレビの型番を調べる。** 内蔵アプリで足りれば買うものはありません::source{4}::source{12}
 - **同時視聴の上限はサービスごとに違う。** パ・リーグTVは複数端末で同時視聴できません::source{19}
