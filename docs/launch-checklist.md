@@ -1,0 +1,411 @@
+# launch-checklist.md — 公開までに本人の手が要るもの
+
+- 作成日: 2026-09-07 / **無料公開への方針変更を反映: 2026-09-14**
+- ここに書いたものは**すべて Akito 本人にしかできない**（アカウント作成・審査申請）。コードでは代替できない。
+- **上から順にやる。** 順番を入れ替えると、あとの項目が止まる（各項目の「これが終わらないと止まるもの」を参照）。
+- 金額は公式の価格ページで確認したものだけを書き、確認できなかったものは **要確認** とした。
+
+> **方針変更（2026-09-14）**: 運営者の判断で、**独自ドメインは買わず、Cloudflare Pages の無料サブドメイン `https://mirumado.pages.dev` で公開する**ことになった。
+> これにともない、旧 #2（ドメイン取得）・#3（DNS）・#7（独自ドメイン割当）・#8（`www` の有無）は**欠番**にした。
+> **項目番号は詰めていない。** #9 以降の番号は他の文書（`handover.md` #10、`ad-placement.md` #15 / #17 / #18 など）から参照されているため、そのまま残してある。
+> あとから独自ドメインに移す場合の手順と、そのとき何が起きるかは **`handover.md` §4-4** にまとめた。
+
+## 全体の所要時間
+
+| 段階 | 項目 | 所要 |
+|---|---|---|
+| A | 公開先を決める（#1〜#2） | 済（判断は完了） |
+| B | 公開する（#4〜#6） | 50分 |
+| C | サイトの中身の穴埋め（#9〜#12） | 1.5時間 |
+| D | 計測（#13〜#14） | 45分 |
+| E | 表記まわりの確認（#15） | 45分 |
+| F | ASP（#16〜#19） | 2時間＋審査待ち（数日〜70日） |
+| | **本人の作業時間の合計** | **約6時間**（待ち時間を除く） |
+
+**旧版からの差分**: 段階 A が「1.5〜2時間＋DNS浸透待ち最大48時間」から消え、段階 B が 1.5時間 → 50分 になった。**待ち時間（DNS浸透の最大48時間）がまるごと無くなるのが一番大きい。** 支払いも発生しない。
+
+---
+
+## 段階 A — 公開先を決める
+
+### #1 サイト名を確定する（済 / 2026-09-10）
+
+**サイト名は「みるまど」（見る窓）で確定した。** `content/site.json` の `"name"` `"publisher"` `"author"` は反映済み。
+
+- 旧仮名「みるナビ」は**使わない**。TVS REGZA がテレビ／ネット動画の視聴ガイド機能「次みるナビ」を出していて、本サイトと領域が重なるため。
+- 変更するときに直すファイルは `handover.md` §4-1 にまとめてある。
+
+**これが終わらないと止まるもの**: #2 以降すべて（プロジェクト名がサイト名から決まるため）。
+
+### #2 公開先を決める（済 / 2026-09-14）— **Cloudflare Pages の無料サブドメイン**
+
+**結論: Cloudflare Pages のプロジェクト名を `mirumado` にして、`https://mirumado.pages.dev` で公開する。** `content/site.json` の `baseUrl` は反映済み。
+
+Cloudflare Pages では**プロジェクト名がそのまま `<プロジェクト名>.pages.dev` のサブドメインになる**。つまり **#6 でプロジェクト名を `mirumado` と打つこと自体が、URL を決める操作**になる。ここを打ち間違えると URL が変わり、`baseUrl` と食い違う。
+
+**この3択を比べた。**
+
+| | 無料URL | このサイトでの評価 |
+|---|---|---|
+| **Cloudflare Pages** ← 採用 | `mirumado.pages.dev` | リポジトリに設定ファイルを1つも置かなくていい。ダッシュボードで「Build command: `node build.mjs`」「Build output directory: `dist`」「`NODE_VERSION=20`」を入れるだけ |
+| GitHub Pages | `<ユーザー名>.github.io` | **サブディレクトリ問題がある。** リポジトリ用サイトは `https://<ユーザー名>.github.io/<リポジトリ名>/` になり、このサイトはルート絶対パス（`/assets/style.css` など）でリンクしているため `build.mjs` の改修が必要。ユーザーサイト（`<ユーザー名>.github.io` 直下）にすればルート公開できるが、**アカウントに1つしか作れない枠**を使い切る。加えてワークフロー YAML の保守が要る |
+| Netlify | `<サイト名>.netlify.app` | 2026年時点でクレジット制になっており、無料枠の読み方が使用量ベースで見積もりにくい（旧 #4 で 2026-09-07 に確認した内容）。`netlify.toml` の保守も要る |
+
+**Cloudflare Pages の無料枠は、この使い方に対して十分すぎる。**（出典: https://developers.cloudflare.com/pages/platform/limits/ ・**2026-09-07 確認**）
+
+| 項目 | 無料枠 | このサイトの実際 |
+|---|---|---|
+| 月あたりのビルド回数 | 500 | 毎日2回でも月60回 |
+| 同時ビルド数 | 1 | 1人なので問題なし |
+| 1デプロイのファイル数 | 20,000 | **記事22本で生成HTMLは32ページ＋アセット2ファイル**（2026-09-15 実測） |
+| 1ファイルの最大サイズ | 25 MiB | 画像を使わない設計なので最大でも数十KB |
+| プロジェクトあたりのカスタムドメイン | 100 | 0（今回は使わない） |
+
+**費用: 0円。**
+
+#### カード登録が要るかどうか —— **公式ページで確認できていない（2026-09-14）**
+
+**正直に書く: 今回、公式ドキュメントを読んで確かめることができなかった。** 作業環境のネットワーク制限で `developers.cloudflare.com` / `www.cloudflare.com` / `docs.netlify.com` / `docs.github.com` のいずれにも接続できず（egress ポリシーで拒否）、ページ本文を1文字も取得できていない。**したがって「カード登録は不要」と断定して書くことはしない。**
+
+上の無料枠の表は、**2026-09-07 に別の担当が同じ URL で確認した内容をそのまま引き継いだもの**で、今日 再確認したものではない。
+
+**本人がやること（10分）**: 次のページを自分のブラウザで開き、**サインアップにクレジットカードの入力欄が出るかどうか**を実際に確かめる。
+
+| 確認するもの | URL | 見るところ |
+|---|---|---|
+| Cloudflare の無料プラン | https://www.cloudflare.com/plans/ | Free プランの申込みにカードが要るか |
+| Workers & Pages の料金 | https://www.cloudflare.com/plans/developer-platform/ | Free プランの記載 |
+| Pages の上限 | https://developers.cloudflare.com/pages/platform/limits/ | 上の表の数字が今も同じか |
+
+**実務上の判断**: カード登録の要否は、**#4 でアカウントを作る画面まで進めば、その場で分かる**。カード入力を求められたらそこで止めて、GitHub Pages（ユーザーサイト）に切り替えればいい。**先に調べ切らなくても、詰まない。**
+
+**これが終わらないと止まるもの**: #4 以降すべて。
+
+### #3 （欠番）DNS を Cloudflare に向ける
+
+**不要になった。** 独自ドメインを使わないため、DNS の設定も浸透待ち（最大48時間）も発生しない。
+
+---
+
+## 段階 B — 公開する
+
+### #4 Cloudflare のアカウントを作る（10分）
+
+1. https://dash.cloudflare.com/sign-up でアカウントを作る。
+2. 確認メールのリンクを踏んで有効化する。
+3. **カード入力を求められたら、そこで止める。** #2 の「実務上の判断」のとおり、GitHub Pages に切り替える判断ポイントはここ。
+
+**ドメインを Cloudflare に追加する（Add a site）操作は不要。** 今回は Pages だけを使う。
+
+**これが終わらないと止まるもの**: #6。
+
+### #5 GitHub にリポジトリを作って push する（20分）
+
+1. GitHub でリポジトリを作る。**Cloudflare Pages に繋ぐだけならプライベートで構わない。**
+2. `.gitignore` に `dist/` を足す（ホスティング側でビルドするのでコミット不要）。
+3. `content/` `assets/` `build.mjs` `serve.mjs` `README.md` `docs/` `research/` を push する。
+
+```bash
+echo "dist/" >> .gitignore
+git init
+git add .gitignore README.md build.mjs serve.mjs content assets docs research
+git commit -m "initial"
+git branch -M main
+git remote add origin git@github.com:<自分>/<リポジトリ名>.git
+git push -u origin main
+```
+
+**リポジトリ名は `mirumado` でなくてよい。** 公開URLを決めるのは **Pages のプロジェクト名**（#6）であって、リポジトリ名ではない。
+
+**これが終わらないと止まるもの**: #6。
+
+### #6 Cloudflare Pages に接続して公開する（20分）— **ここで URL が決まる**
+
+1. Cloudflare ダッシュボード → **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
+2. #5 で作ったリポジトリを選ぶ
+3. **Project name: `mirumado`** ← **ここが `mirumado.pages.dev` の `mirumado` になる。**
+   - **半角小文字で、余計な文字を入れない。** `mirumado-site` や `mirumado2` にすると URL が `mirumado-site.pages.dev` になり、`site.json` の `baseUrl` と食い違う。
+   - **`mirumado` が他のユーザーに先に取られていて弾かれる可能性がある。** `.pages.dev` のサブドメインは全ユーザー共通の名前空間。弾かれたら、**別名を決めて `content/site.json` の `baseUrl` を必ずそれに合わせて直し、`node build.mjs --check` を通し直す**（`handover.md` §4-2）。
+4. Production branch: `main`
+5. Framework preset: **None**
+6. **Build command: `node build.mjs`**
+7. **Build output directory: `dist`**
+8. Environment variables: **`NODE_VERSION`** = **`20`**
+9. **Save and Deploy**
+
+ビルドが緑になったら `https://mirumado.pages.dev/` を開く。
+
+**公開できたことの確認（5分）**
+
+```bash
+node build.mjs --check     # 手元でもエラー0であること
+```
+
+ブラウザで次を見る。
+
+- `https://mirumado.pages.dev/` — トップが出る
+- `https://mirumado.pages.dev/sitemap.xml` — `<loc>` が `https://mirumado.pages.dev/...` になっている
+- `https://mirumado.pages.dev/robots.txt` — `Sitemap:` 行が同じドメインを指している
+- トップの HTML ソースで `<link rel="canonical" href="https://mirumado.pages.dev/">` になっている
+
+**`baseUrl` は反映済み**（2026-09-14 に `https://mirumado.pages.dev` へ変更・`--check` 通過確認済み）。旧版のような「独自ドメインを割り当てるまで canonical が開けないURLを指している」状態は**もう起きない。プロジェクト名を `mirumado` にしさえすれば、最初のデプロイから canonical と実URLが一致する。**
+
+**これが終わらないと止まるもの**: #13（Search Console）、#17（ASPのサイト登録）。
+
+### #7 （欠番）独自ドメインを割り当てる
+
+**今回は行わない。** あとから移す場合の手順と、そのとき何が起きるか（検索評価・ASP提携の取り直しを含む）は **`handover.md` §4-4** を読むこと。
+
+### #8 （欠番）`www` の有無を決める
+
+**不要になった。** `mirumado.pages.dev` に `www` は付かない。
+
+---
+
+## 段階 C — サイトの中身の穴埋め
+
+### #9 `content/site.json` の `contactEmail` を直す（10分）— `baseUrl` は反映済み
+
+README の「公開手順」にあるとおり、canonical・OGP・sitemap・RSS がすべて `baseUrl` を使う。
+
+```json
+"baseUrl": "https://mirumado.pages.dev",
+"contactEmail": "<実際のメールアドレス>",
+```
+
+- **`baseUrl` は 2026-09-14 に `https://mirumado.pages.dev` へ変更済み**（末尾のスラッシュは付けない）。**#6 でプロジェクト名を `mirumado` にする限り、ここは触らなくていい。** 別名になった場合だけ、その名前に合わせて直す。
+- `contactEmail` は現在 `【要記入】contact@example.com`。**この文字列がそのまま `/policy/` と `/about/` に出る**ので、必ず直す。**残ったまま ASP に申請すると、審査でサイトの体裁を疑われる。**
+- 直したら `node build.mjs --check` を回して `BreadcrumbList の item が baseUrl 始まりではありません` が出ないことを確認する。
+
+**これが終わらないと止まるもの**: #13（Search Console のサイトマップが仮ドメインを指す）、#17（ASPのサイト登録URLと食い違う）。
+
+### #10 `build.mjs` の `【要記入】` を全部埋める（30分）
+
+```bash
+grep -rn '【要記入】' content/ build.mjs
+```
+
+`build.mjs` の `buildAbout()` と `buildPolicy()` の中にある。**この作業だけは `build.mjs` を編集する**（記事担当・サイト担当と同時に触らないよう、作業前に一声かける）。
+
+| 場所 | 出るページ | 何を書くか |
+|---|---|---|
+| `buildAbout()` 運営者名 | `/about/` | ハンドルネームで可 |
+| `buildAbout()` 連絡先 | `/about/` | `site.json` の `contactEmail` を直せば自動で入る |
+| `buildAbout()` 運営開始 | `/about/` | 実際に公開した年月（例: 2026年9月） |
+| `buildPolicy()` 運営者名 | `/policy/` | ハンドルネームで可 |
+| `buildPolicy()` 所在地 | `/policy/` | 「法令上の請求があった場合に遅滞なく開示します」という但し書きが既に入っている。個人なら都道府県までの記載＋この但し書きで運用する例が多いが、**自分の判断で決める**（#15 参照） |
+| `buildPolicy()` 連絡先 | `/policy/` | `site.json` の `contactEmail` から自動 |
+| `buildPolicy()` お問い合わせ方法 | `/policy/` | メールアドレス直書きか、フォームを置くならそのリンク |
+| `buildPolicy()` 利用中のASP | `/policy/` | 現在「A8.net、もしもアフィリエイト、afb」と書かれている。**実際に提携しているものだけ**に直す。公開時点で A8.net だけなら A8.net だけにする |
+| `buildPolicy()` アクセス解析ツール名 | `/policy/` | #14 で入れるツール名（例: Google アナリティクス）。入れないならこの項目ごと削る |
+| `buildPolicy()` 制定日 | `/policy/` | 公開日 |
+| `buildPolicy()` 最終改定日 | `/policy/` | 公開日。以後、直すたびに更新する |
+
+埋めたあと、`grep -rn '【要記入】' content/ build.mjs` が**何も出ない**ことを確認する。
+
+**これが終わらないと止まるもの**: #17（ASPの審査で「運営者情報が無い」を理由に落ちうる）、#15。
+
+### #11 サンプル記事を消す（5分）
+
+`content/articles/_sample-1.md` `_sample-2.md` は `_` 始まりなので本番ビルドには出ないが、リポジトリに残っていると紛らわしい。記事が5本を超えたら消す。
+
+**これが終わらないと止まるもの**: 何も止まらない。後回しでよい。
+
+### #12 再ビルド → 検証 → デプロイ（10分）
+
+```bash
+node build.mjs --check          # 「検証: 問題は見つかりませんでした。」を確認
+git add -u && git commit -m "set baseUrl and fill placeholders" && git push
+```
+
+公開URLで `/policy/` と `/about/` を開き、`【要記入】` が1つも残っていないことを目で確認する。
+
+**これが終わらないと止まるもの**: #13。
+
+---
+
+## 段階 D — 計測
+
+### #13 Google Search Console に登録してサイトマップを送る（20分）
+
+> **無料サブドメインでは「ドメインプロパティ」が使えない。** ドメインプロパティは **DNSレコードによる確認が唯一の方法**（出典: https://support.google.com/webmasters/answer/9008080?hl=ja ・2026-09-07 確認）だが、`pages.dev` の DNS は Cloudflare のものであって Akito は触れない。**必ず「URLプレフィックス」プロパティを選ぶ。**
+
+1. Search Console でプロパティを追加する。**URLプレフィックス**を選び、`https://mirumado.pages.dev/` を入力する（**末尾のスラッシュまで含めて、`baseUrl` と一致させる**）。
+2. 所有権の確認方法を選ぶ。**DNS以外の方法を使う。**
+   - **HTMLファイル方式は、このサイトでは使えない。** `assets/` に置いたファイルは `dist/assets/` に配られるため（`build.mjs`）、Google が要求するルート直下（`/google〇〇.html`）に置けない。
+   - **HTMLタグ方式（`<meta name="google-site-verification" ...>`）を使う。** ただし `build.mjs` の `<head>` 生成部分に1行足す改修が必要（#14 と同じ事情）。**サイト担当に依頼する。** #10 で `build.mjs` を触るタイミングとまとめると一度で済む。
+   - Google アナリティクスを先に入れる（#14）なら、その計測タグで確認する方法も選べる。
+3. 確認が通ったら、サイトマップに `sitemap.xml` を送信する。
+4. 「URL検査」でトップページを検査し、インデックス登録をリクエストする。
+
+**あとで独自ドメインに移すと、このプロパティは作り直しになる**（`handover.md` §4-4）。
+
+**費用: 0円。**
+
+**これが終わらないと止まるもの**: 週1の運用（`daily-operation.md` §7）の Search Console 確認。表示回数が出始めるのは登録から数日後なので、**公開初日にやっておく**。
+
+### #14 アクセス解析を入れる（25分）
+
+- **`build.mjs` は外部スクリプトを一切読み込まない設計**（外部フォント・CDN・画像を読み込まない設計）。解析タグを入れるには `build.mjs` の `<head>` 生成部分に1行足す改修が必要になる。**サイト担当に依頼する。**
+- 入れる前に、`/policy/` のアクセス解析の項目（#10）を、実際に入れるツール名に直す。
+- Cloudflare Pages を使う場合、**Cloudflare Web Analytics** ならスクリプト1本で済み、Cookie を使わない。プライバシーポリシーの記述も軽くなる。Google アナリティクスにするなら Cookie を使う旨の記載が要る（`/policy/` に既に雛形がある）。
+- **どちらにするかは本人が決める。** 決めるまで入れなくてよい（Search Console だけでも週1の運用は回る）。
+
+**費用: 0円**（Cloudflare Web Analytics / Google アナリティクス4 とも無料）。
+
+**これが終わらないと止まるもの**: 何も止まらないが、記事ごとの読了・離脱が見えないままになる。
+
+---
+
+## 段階 E — 表記まわりの確認
+
+### #15 ステマ規制と特定商取引法まわりを確認する（45分）
+
+#### ステマ規制（景品表示法）
+
+| 項目 | 内容 | 出典 | 確認日 |
+|---|---|---|---|
+| 施行日 | 「令和5年10月1日からステルスマーケティングは景品表示法違反となります」 | https://www.caa.go.jp/policies/policy/representation/fair_labeling/stealth_marketing/ | 2026-09-07 |
+| 規制の名宛人 | 「規制の対象となるのは、商品・サービスを供給する事業者(広告主)です。企業から広告・宣伝の依頼を受けたインフルエンサー等の第三者は規制の対象とはなりません。」 | 同上 | 2026-09-07 |
+| 運用基準（PDF） | 「一般消費者が事業者の表示であることを判別することが困難である表示」の運用基準 | https://www.caa.go.jp/policies/policy/representation/fair_labeling/guideline/assets/representation_cms216_230328_03.pdf | 2026-09-07 |
+
+**読み方**: 法律上の名宛人は広告主であって媒体側ではない。**それでも表記は自分で担保する。** 理由は2つ。(1) 広告主が違反に問われれば、そのプログラムは止まり、こちらの収入も止まる。(2) ASP 側が規約で表記を義務づけている（下記）。
+
+#### A8.net が求めている表記
+
+| 項目 | 内容 | 出典 | 確認日 |
+|---|---|---|---|
+| 表記の位置 | 「ファーストビュー等、一般消費者が認識できる位置にわかりやすく表示が必要です。」（サイトのヘッダー部分／広告を掲載している各記事の上部／オーバーレイでサイト全体に表示、などが例示） | https://www.a8.net/compliance/prNotation-urlSubmission.php | 2026-09-07 |
+| 使える文言 | 「広告」「PR」「アフィリエイト広告」「プロモーション」など。説明文言の例:「アフィリエイト広告を利用しています」「本ページはプロモーションが含まれています」 | 同上 | 2026-09-07 |
+| 広告掲載URLの提出 | 管理画面の「広告掲載URL管理」から提出する。共通表示エリアなら「トップページなどその表示が確認できる１ページのみをご提出ください。」 | 同上 | 2026-09-07 |
+
+**このサイトの現状**: `site.json` に `"adDisclosure": "本記事にはアフィリエイト広告（プロモーション）が含まれます。"` があり、記事ページに出力される。**表示位置が「ファーストビュー等」の条件を満たしているかを、公開後に実機で確認する**（スマホで記事を開き、スクロールせずに見えるか）。満たしていなければ表示位置の変更をサイト担当に依頼する。
+
+#### A8.net の禁止事項のうち、この運用で踏みやすいもの
+
+（出典: https://www.a8.net/compliance/prohibited-matter.php ・2026-09-07 確認）
+
+| 禁止事項 | 原文 | 運用上の注意 |
+|---|---|---|
+| 登録外サイト・アプリへの広告掲載 | 「A8.netへ登録していない（もしくは登録を削除した）サイトやアプリ、メールマガジン、個人宛のメールやSNSのメッセージ、PDFファイルや紙媒体などに広告を掲載して配布・配信すること」 | **#17 のサイト登録を、広告を貼る前に必ず済ませる** |
+| 自己クリック | 「自分で広告をクリックすることや、第三者と協力して広告をクリックすること」 | 動作確認でリンクを踏まない。踏むなら別ブラウザで、申込には進まない |
+| 広告素材の改変 | （禁止事項として明記） | **ASPが出したリンクタグを書き換えない。** `ad-placement.md` §3 参照 |
+| ビジターへの誤解を与える掲載方法 | （禁止事項として明記） | 却下条件を隠して申し込ませない |
+| 成果条件の公開 | （禁止事項として明記） | 「この案件は登録完了で◯円」と記事に書かない |
+
+#### 特定商取引法
+
+- このサイトは**自分では商品・サービスを販売しない広告媒体**なので、通信販売事業者としての「広告の表示」（特商法11条）の義務は原則としてかからないという整理が一般的。ただし**この整理は本タスクで公式ページから確認できていない**（`https://www.no-trouble.caa.go.jp/what/mailorder/` はリダイレクトが多く到達できなかった・2026-09-07）。
+- **要確認**: 消費者庁の特定商取引法ガイド（`https://www.no-trouble.caa.go.jp/`）を自分のブラウザで開き、通信販売の定義と広告表示義務の対象を確認する。
+- 確認が済むまでの実務としては、**`/policy/` に運営者名・連絡先・免責を書いておけば足りる**（#10 で埋めている）。特商法表記のページを別に作る必要があるかは、上の確認をしてから判断する。
+- 将来、自分で有料noteやグッズを売るなら、その時点で特商法表記が必須になる。
+
+**これが終わらないと止まるもの**: #17（ASPの審査）。表記が無いと提携が却下されうる。
+
+---
+
+## 段階 F — ASP（本人にしかできない）
+
+### #16 A8.net の受取口座を設定する（15分）
+
+| 項目 | 内容 | 出典 | 確認日 |
+|---|---|---|---|
+| 支払方式 | 「5,000円支払方式」「1,000円支払方式」「キャリー・オーバー方式」の3種 | https://www.a8.net/faq/6.html | 2026-09-07 |
+| 支払時期 | 「登録サイトごとに1,000円以上の報酬があった場合、月末締めの翌々月振込」との記載あり。**各方式の詳細な最低支払金額は同ページでは確認できず、リンク先で要確認** | 同上 | 2026-09-07 |
+| 振込手数料 | メディア会員負担。**具体的な金額は要確認**（`https://support.a8.net/a8/as/faq/2008/05/as_3.html` を自分で開く） | — | — |
+
+**本人がやること**: 口座を登録し、支払方式を選ぶ。手数料の安い金融機関を選ぶ（ゆうちょ銀行が最も安い、という情報が立ち上げ台帳にあるが、**金額は本人が管理画面で確認すること**）。
+
+**これが終わらないと止まるもの**: 報酬が発生しても振り込まれない。急がないが、忘れやすいのでここでやる。
+
+### #17 A8.net にサイトを登録する（20分）— **広告を貼る前に必ず**
+
+1. A8.net の管理画面 → サイト情報の登録・修正 → **新しいサイトを追加**
+2. 登録URLは **`https://mirumado.pages.dev`**（#6 で公開したURL）。**「あとで独自ドメインを取るから」と URL を空けて待たない。** ドメインは買わない方針で確定している（#2）
+3. **`.pages.dev` のような無料サブドメインが受け付けられるかは、公開情報では確認できていない**（→ `ad-placement.md` §7）。**弾かれた場合にどうするかも同じ節に書いてある。** ここは申請してみないと分からない
+4. カテゴリ・サイト説明・想定読者を入力する
+5. 「広告掲載URL管理」から広告掲載URLを提出する（#15 参照）
+
+**登録外サイトへの広告掲載は明確な禁止行為**（#15 の表）。**サイト登録が終わるまで、A8のリンクは1本も貼らない。**
+
+**これが終わらないと止まるもの**: A8 の提携申請（#18）。
+
+### #18 提携申請の順番（`ad-map.md` に沿った一覧）
+
+**単価は3社とも公開ページからは確認できない（ログイン必須）。** 提携が通った直後に管理画面で単価・成果地点・却下条件・承認期間を確認し、`ad-placement.md` の「要ログイン確認」を上書きする。
+
+> ~~**2026-09-10 更新**: …対象は **22記事・56枠**。~~
+>
+> **2026-09-14 更新**: **20本の計画にあった記事がすべて書かれた**ので、下の「使う記事」の欄を **`content/articles/*.md` の `ad_slots` からの実測**に置き換えた。対象は **22記事・57枠**（`node build.mjs --check` の「記事 22 本」「広告枠 57 箇所」と一致）。**「未執筆◯枠」という書き方はもう出てこない。全部実在する枠です。**
+>
+> **計画から減った枠がある。** DMM TV は計画6枠だったが**実在2枠**（`mma-live-streaming` の2枠は 2026-09-10 に、`sports-streaming-tv-setup` / `skyperfectv-baseball-review` の各1枠は 2026-09-14 に取りやめ。いずれも**本文で DMM TV に触れられなかった**ため）。**申請の優先順位が変わるので注意。**
+
+#### 段階1: 記事0〜10本（今すぐ）
+
+| 順 | ASP | 案件 | 使う記事（`ad-map.md`） | 備考 |
+|---|---|---|---|---|
+| 1 | **A8.net**（審査通過済み） | **ABEMAプレミアム** | **計7枠（全部実在）。** `j-league-live-streaming` / `catchup-watch-now` / `free-streaming-options` / `boxing-live-streaming` / `mma-live-streaming` / `soccer-free-broadcast` / `abema-premium-review` の各 **slot-footer** | 公開直後に貼れる可能性が最も高い1件。まずこれだけで公開する |
+
+#### 段階2: 記事10〜30本
+
+まず**メディア登録（サイト審査）**を申請し、通ってから個別プログラムに提携申請する。
+
+| 順 | ASP | 申請するもの | 使う記事 |
+|---|---|---|---|
+| 2 | **afb** | メディア登録 | — |
+| 3 | afb | **ABEMAプレミアム** | **計20枠（19記事）で最も使用箇所が多い。全部実在。** **slot-mid 10** = `abema-premium-review` / `boxing-live-streaming` / `free-streaming-options` / `j-league-live-streaming` / `mma-live-streaming` / `soccer-free-broadcast` / `sports-streaming-tv-setup` / `streaming-price-basics` / `tver-catchup-watch` / `watch-on-tv`。**slot-hero 3** = `abema-premium-review` / `catchup-watch-now` / `sports-streaming-comparison`。**slot-footer 5** = `emperors-cup-broadcast` / `npb-live-streaming` / `npb-postseason-broadcast` / `pacific-league-tv-watch` / `unext-vs-hulu-price`。**slot-compare 2** = `catchup-deadline-list` / `soccer-streaming-services-hub`（10＋3＋5＋2＝20） |
+| 4 | afb | **DMM TV** | **計2枠**（計画は6枠だった）。`soccer-streaming-services-hub` slot-footer / `baseball-streaming-services-hub` slot-footer。**取りやめ4枠**: `mma-live-streaming` の2枠（2026-09-10・公式ページに到達できず。`unverified.md` No.65〜67）、`sports-streaming-tv-setup` / `skyperfectv-baseball-review` の各1枠（2026-09-14・料金は取れたがスポーツ／野球のラインアップと対応機器が取れず本文で触れられなかった）。**使用箇所が2枠まで減ったので、申請の優先度は下げてよい** |
+| 5 | afb | **WOWOW（WOWOWオンデマンド）** | **計6枠（全部実在）。** slot-compare 2 = `boxing-live-streaming` / `music-live-streaming`。slot-footer 4 = `sports-streaming-comparison` / `watch-on-tv` / `catchup-deadline-list` / **`sports-streaming-tv-setup`**（2026-09-14 に DMM TV から差し替え） |
+| 6 | afb | **Hulu** | **計1枠（実在）。** `unext-vs-hulu-price` slot-compare（U-NEXT と同じ枠に2件併記）。**この記事は 2026年10月1日の値上げが主題**なので、提携が通るなら10月1日までに間に合わせたい |
+| 7 | **もしもアフィリエイト** | メディア登録 | — |
+| 8 | もしも | **DMM TV** | **計0枠。** `mma-live-streaming` slot-footer に置く計画だったが取りやめた。**afb（#4）が通らなかったときの代替としてだけ検討する。いま申請する理由は無い** |
+| 9 | もしも | **WOWOW** | **計1枠。** `music-live-streaming` slot-footer（afb が未提携の間の代替） |
+
+#### 段階3: 記事30本以降（承認期間が長い・条件が細かい）
+
+| 順 | ASP | 申請するもの | 使う記事 | 注意 |
+|---|---|---|---|---|
+| 10 | **もしも** | **スカパー！** | **計13枠（全部実在）。** `npb-live-streaming` slot-hero/slot-compare / `pacific-league-tv-watch` slot-mid / `soccer-streaming-services-hub` slot-compare / `baseball-streaming-services-hub` slot-compare / `sports-streaming-comparison` slot-compare / `watch-on-tv` slot-compare / `mma-live-streaming` slot-compare / `emperors-cup-broadcast` slot-mid / `npb-postseason-broadcast` slot-mid / `skyperfectv-baseball-review` slot-hero/slot-mid / **`sports-streaming-tv-setup` slot-compare**（2026-09-14 追加） | **使用箇所が最も多い案件。承認期間が長い前提で早めに申請する。** オンデマンド単体加入が成果対象外になる条件が付く可能性があるので、通ったら必ず管理画面で確認する |
+| 11 | **afb** | **U-NEXT** | **計6枠（全部実在）。** `tver-catchup-watch` slot-footer / `catchup-watch-now` slot-mid / `music-live-streaming` slot-mid / `streaming-price-basics` slot-footer / `free-streaming-options` slot-compare / `unext-vs-hulu-price` slot-compare。**`boxing-live-streaming` / `mma-live-streaming` に U-NEXT の枠は置いていない**（本文では U-NEXT を第一候補として紹介しているが、枠は ABEMAプレミアム（A8.net）にした） | **クローズド案件化しているという第三者情報がある。** 通らない前提で計画し、通るまで枠は空けておく |
+
+#### 保留（申請しない／できない）
+
+| 案件 | 状況 | 対応 |
+|---|---|---|
+| **パ・リーグTV** | 3社に案件があるか未確認。**実在4枠**（`pacific-league-tv-watch` slot-hero / `baseball-streaming-services-hub` slot-compare / `npb-postseason-broadcast` slot-compare / `skyperfectv-baseball-review` slot-footer） | 管理画面で検索し、無ければ公式サイトへの通常リンク（アフィリエイトなし）にする。**4枠あるので、検索は早めに1回やる価値がある** |
+| **DAZN** | 指定3ASPには無い見込み | `j-league-live-streaming` の slot-hero は**空けたまま公開する**。「提携できていないから別のサービスを勧める」書き方をしない |
+
+**共通ルール（`ad-map.md`）**: 未提携の案件は**枠を空けたまま公開する**。成果にならない導線を先に作らない。
+
+**これが終わらないと止まるもの**: 収益。記事の公開自体は止まらない。**記事を先に出すこと。**
+
+### #19 提携が通った直後に管理画面で必ず確認する6点
+
+1. **報酬単価**（`ad-placement.md` の「要ログイン確認」を実測値で上書きする）
+2. **成果地点**（登録完了か、有料契約完了か、入金確認か）
+3. **却下条件**（既存ユーザー除外、アプリ経由除外、無料トライアルのみ除外など）
+4. **承認期間**（30日／60日／70日／月1回などばらつく）
+5. **リスティング広告の可否**（禁止の案件が多い前提で計画する）
+6. **掲載NG媒体の条件**
+
+3の却下条件は、**記事本文にも書く。** 読者が条件を満たさないまま申し込むと、こちらの成果にならないうえ読者も損をする（`daily-operation.md` §4-2）。
+
+---
+
+## 公開してよい状態のチェックリスト
+
+- [x] #1 サイト名を確定した（**みるまど**／2026-09-10）
+- [x] #2 公開先を決めた（**Cloudflare Pages の無料サブドメイン `mirumado.pages.dev`**／2026-09-14。ドメインは買わない）
+- [ ] #4 Cloudflare のアカウントを作った（**カード入力を求められなかった**ことを確認）
+- [ ] #5 GitHub に push した（`.gitignore` に `dist/`）
+- [ ] #6 Pages のプロジェクト名を **`mirumado`** にしてビルドが通った（**URL がここで決まる**）
+- [ ] #6 `https://mirumado.pages.dev/` が開ける／`sitemap.xml`・`robots.txt`・canonical が同じドメインを指している
+- [ ] #9 `site.json` の `contactEmail` を直した（`baseUrl` は `https://mirumado.pages.dev` で設定済み）
+- [ ] #10 `grep -rn '【要記入】' content/ build.mjs` が何も出ない
+- [ ] #12 `node build.mjs --check` が「問題は見つかりませんでした」を出す
+- [ ] #12 公開URLの `/policy/` と `/about/` を目で確認した
+- [ ] #13 Search Console でサイトマップを送信した
+- [ ] #15 スマホの実機で、記事のファーストビューにPR表記が見えることを確認した
+- [ ] #16 受取口座を設定した
+- [ ] #17 A8.net にサイトを登録した（**これより前に広告を貼っていない**）
+- [ ] #18 A8 の ABEMA 案件に提携申請した

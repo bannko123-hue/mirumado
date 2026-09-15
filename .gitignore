@@ -1,0 +1,36 @@
+# ビルド出力（node build.mjs で毎回まるごと作り直される。手で編集しない）
+dist/
+
+# Node（このプロジェクトは依存パッケージゼロだが、将来ツールを足したとき用）
+node_modules/
+npm-debug.log*
+yarn-error.log*
+.npm/
+package-lock.json.bak
+
+# OS が勝手に作るファイル
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+ehthumbs.db
+desktop.ini
+
+# エディタ・IDE の設定
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.\#*
+\#*\#
+
+# ローカル環境・秘密情報（ASP のタグや API キーを一時的に置くとき用）
+.env
+.env.*
+*.local
+
+# Cloudflare / wrangler の作業ディレクトリ
+.wrangler/

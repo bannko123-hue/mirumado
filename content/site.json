@@ -1,0 +1,77 @@
+{
+  "name": "みるまど",
+  "tagline": "見たい試合・番組の「どこで見られるか」を今日の情報で案内します。",
+  "description": "スポーツとエンタメのライブ配信・見逃し配信について、視聴方法・料金・無料で見る方法をまとめた個人運営のメディアです。",
+  "baseUrl": "https://mirumado.pages.dev",
+  "locale": "ja_JP",
+  "homeLatestCount": 22,
+  "homeUpdatedCount": 8,
+  "author": "みるまど編集部",
+  "publisher": "みるまど",
+  "contactEmail": "【要記入】contact@example.com",
+  "twitter": "",
+  "categories": [
+    {
+      "slug": "soccer",
+      "name": "サッカー",
+      "description": "Jリーグ・海外サッカー・代表戦の配信と見逃し配信の視聴方法をまとめています。"
+    },
+    {
+      "slug": "baseball",
+      "name": "野球",
+      "description": "プロ野球・MLB・国際大会をネットで見る方法と、球団別の配信状況をまとめています。"
+    },
+    {
+      "slug": "fighting",
+      "name": "格闘技・ボクシング",
+      "description": "ボクシングの世界戦やMMA・キックボクシングのPPV・配信情報をまとめています。"
+    },
+    {
+      "slug": "entertainment",
+      "name": "エンタメ・音楽",
+      "description": "音楽ライブ・フェス・音楽番組の配信と見逃し配信の視聴方法をまとめています。"
+    },
+    {
+      "slug": "compare",
+      "name": "サービス比較",
+      "description": "動画配信サービスの料金・対応デバイス・無料期間を横並びで比較します。"
+    }
+  ],
+  "entryPoints": [
+    {
+      "label": "今すぐ試合を見たい",
+      "note": "今夜の試合に間に合う、最短の視聴手順から探す",
+      "href": "/soccer/",
+      "icon": "play"
+    },
+    {
+      "label": "サービスを選びたい",
+      "note": "料金・対応デバイス・見られる競技で比較して決める",
+      "href": "/compare/",
+      "icon": "compare"
+    },
+    {
+      "label": "無料で見たい",
+      "note": "無料期間・無料放送・見逃し配信の使い方から探す",
+      "href": "/search/?q=無料",
+      "icon": "free"
+    },
+    {
+      "label": "見逃した番組を探す",
+      "note": "放送後に見返せる見逃し配信の期限と手順を確認する",
+      "href": "/entertainment/",
+      "icon": "replay"
+    }
+  ],
+  "nav": [
+    {
+      "label": "サイトについて",
+      "href": "/about/"
+    },
+    {
+      "label": "運営者情報・免責",
+      "href": "/policy/"
+    }
+  ],
+  "adDisclosure": "本記事にはアフィリエイト広告（プロモーション）が含まれます。"
+}
