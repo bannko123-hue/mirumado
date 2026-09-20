@@ -8,6 +8,7 @@
 - **2026-09-10 更新（2回目）**: `boxing-live-streaming`（3枠）／`mma-live-streaming`（3枠）／`music-live-streaming`（3枠）の本文を書いたので、§5 の該当行を実際の `ad_slots` に合わせました。計画から差し替えた枠の理由は §5 の各注記にあります。
 - **2026-09-10 更新（3回目・集計の突き合わせ）**: 実ファイルと §5 の表を1行ずつ数え直しました。**記事は14本、実在する広告枠は37枠**（`node build.mjs --check` の「広告枠 37 箇所（うちタグ挿入済み 0 箇所）」と一致）。**§5 の表の対象は22記事・56枠**（うち1枠は `j-league-live-streaming` の動線なし枠）で、末尾の案件別集計はこの56枠を数えたものです。
 - **2026-09-15 更新（集計の突き合わせ・最新）**: 実ファイル `content/articles/*.md` の `ad_slots` から数え直しました。**記事は22本、実在する広告枠は57枠、`html:` 挿入済みは0枠**（`node build.mjs --check` の「記事 22 本」「広告枠 57 箇所（うちタグ挿入済み 0 箇所）」「警告 57 件」と一致）。**20本の計画に対して実際は22本**（差分+2本は計画に無かった `watch-on-tv` / `free-streaming-options`）。**もう「計画分」の枠はありません。§5 の表は全部実在する枠です。**
+- **2026-09-20 更新（afb の登録・媒体審査通過）**: 本人が **afb（アフィリエイトB／運営: 株式会社フォーイット・https://www.afi-b.com/pa/main ）に登録し、同日に媒体審査を通過**しました。**個別の広告主との提携はまだ0件です。** afb で埋められる枠（**34枠 / 案件数35件**）の申請順・タグを入れる場所・支払い条件は **`docs/afb-partner-plan.md`** に分けました（→ §8）。**どのサービスが afb に広告主として存在するかは、公開ページからは1件も確認できませんでした**（広告主検索はログイン必須）。**§5 の「ASP」欄は引き続き「当たりを付けた先」であって、確認済みの事実ではありません。**
 - **2026-09-08 更新**: §4 に書いていた `build.mjs` の改修が**入りました**。`ad_slots` に `html:` を書けば ASP のタグをそのまま出力できます。タグ未挿入の枠は本番ビルドで何も出力されません。§2〜§4 は改修後の仕様に書き直してあります。
 
 ---
@@ -410,7 +411,20 @@ node serve.mjs        # 該当記事を開き、リンクが実際に踏める�
 
 ---
 
-## 7. 無料サブドメイン（`mirumado.pages.dev`）で ASP に申請できるか（2026-09-14 調査）
+## 7. 無料サブドメイン（`mirumado.pages.dev`）で ASP に申請できるか（2026-09-14 調査 / 2026-09-20 追記）
+
+> **2026-09-20 追記 — afb は媒体審査を通過した。ただし「pages.dev で通った」とはまだ言えない。**
+>
+> | 事項 | 状況 |
+> |---|---|
+> | afb の媒体審査 | **通過（2026-09-20・本人からの連絡）** |
+> | **そのとき afb に登録した URL が `https://mirumado.pages.dev` だったか** | **未確認。** サイトはまだ Cloudflare Pages に公開されていないため、**この時点で `mirumado.pages.dev` は存在しないか、中身が無い状態だったはず**。本人が何を登録したのかはこちらでは分からない |
+> | A8.net | 会員登録・審査は通過済みだが、**サイト登録（`launch-checklist.md` #17）はまだ**。**無料サブドメインでのサイト登録が通るかは未確認** |
+> | もしもアフィリエイト | **登録状況そのものが未確認** |
+>
+> **したがって「無料サブドメインでも ASP の審査は通る」と一般化しないこと。** 分かっているのは「**afb の媒体審査は 2026-09-20 に通った**」という1点だけで、**その審査対象が `mirumado.pages.dev` だったかどうかが未確認**です。→ `research/unverified.md` No.88
+>
+> **本人が最初に確認すること**: afb の管理画面でサイト（メディア）の登録 URL を開き、**`https://mirumado.pages.dev` になっているか**を見る。違っていたら、**公開後に必ず登録 URL を直す**（登録外サイトへの広告掲載は明確な禁止行為。§6）。
 
 **結論から: 公開情報では判断できなかった。** そして **これは、Akito さんが実際に申請してみないと分からない可能性が高い。**
 
@@ -463,3 +477,109 @@ node serve.mjs        # 該当記事を開き、リンクが実際に踏める�
 | 落ちた直後に同じ内容で連続再申請する | 心証を悪くする。§6 の「無差別な大量提携申請」と同じ扱いになりうる |
 | 「独自ドメインを取る予定」と書いて、取っていないURLで登録する | 登録URLと実サイトが食い違う。**登録外サイトへの掲載**に直結する |
 | 審査を通すために記事の結論を広告主寄りに書き換える | このサイトの編集方針（README）に反する。読者にとって最良の答えが最優先 |
+
+---
+
+## 8. afb で埋められる枠の一覧（2026-09-20）
+
+**本人が afb に登録し、媒体審査を通過しました（2026-09-20）。個別の広告主との提携はまだ0件です。**
+
+**作業リストは `docs/afb-partner-plan.md` に分けました。** そちらに、①提携申請の順番／②承認が下りたらタグを入れる場所（記事slug・枠ID・記事内の見出し）／③タグの入れ方／④afb で扱いが無かったときの振り分け／⑤afb の報酬支払い条件／⑥この環境で確認できなかったこと、が入っています。**枠を1つずつ潰していく作業はそちらを見てください。** この節はその要約です。
+
+### 8-1. 枠の振り分け（2026-09-20・実ファイルから数え直した57枠）
+
+| ASP候補 | 枠数 |
+|---|---|
+| **afb** | **34枠**（案件数で数えると**35件**。`unext-vs-hulu-price` の `slot-compare` だけ afb 案件が2件入る） |
+| もしもアフィリエイト（afb と同居する1枠を除く） | 13枠 |
+| A8.net | 7枠 |
+| ASP未定（パ・リーグTV 単独の枠） | 3枠 |
+| **合計** | **57枠** |
+
+### 8-2. 枠ID / 記事slug / 想定サービス / ASP候補 / 確認状況
+
+**「確認状況」の列は、そのサービスの案件が**その ASP に実在するか**を公開ページで確認できたかどうかです。単価ではありません。**
+
+| 枠ID | 記事 slug | 想定サービス | ASP候補 | 確認状況 |
+|---|---|---|---|---|
+| `slot-hero` | `abema-premium-review` | ABEMAプレミアム | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-mid` | `abema-premium-review` | ABEMAプレミアム | afb | **未確認**（同上） |
+| `slot-footer` | `abema-premium-review` | ABEMAプレミアム | A8.net | **未確認**（A8 の管理画面で要確認） |
+| `slot-compare` | `baseball-streaming-services-hub` | スカパー！／パ・リーグTV | もしも／要確認 | **未確認**（もしもは登録状況も未確認） |
+| `slot-footer` | `baseball-streaming-services-hub` | DMM TV | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-compare` | `boxing-live-streaming` | WOWOW | afb | **未確認**（同上） |
+| `slot-mid` | `boxing-live-streaming` | ABEMAプレミアム | afb | **未確認**（同上） |
+| `slot-footer` | `boxing-live-streaming` | ABEMAプレミアム | A8.net | **未確認**（A8 の管理画面で要確認） |
+| `slot-compare` | `catchup-deadline-list` | ABEMAプレミアム | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-footer` | `catchup-deadline-list` | WOWOW | afb | **未確認**（同上） |
+| `slot-hero` | `catchup-watch-now` | ABEMAプレミアム | afb | **未確認**（同上） |
+| `slot-mid` | `catchup-watch-now` | U-NEXT | afb | **未確認**（同上。クローズド案件化しているという第三者情報あり＝一次情報ではない） |
+| `slot-footer` | `catchup-watch-now` | ABEMAプレミアム | A8.net | **未確認**（A8 の管理画面で要確認） |
+| `slot-mid` | `emperors-cup-broadcast` | スカパー！ | もしも | **未確認**（もしもは登録状況も未確認） |
+| `slot-footer` | `emperors-cup-broadcast` | ABEMAプレミアム | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-mid` | `free-streaming-options` | ABEMAプレミアム | afb | **未確認**（同上） |
+| `slot-compare` | `free-streaming-options` | U-NEXT | afb | **未確認**（同上） |
+| `slot-footer` | `free-streaming-options` | ABEMAプレミアム | A8.net | **未確認**（A8 の管理画面で要確認） |
+| `slot-mid` | `j-league-live-streaming` | ABEMAプレミアム | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-footer` | `j-league-live-streaming` | ABEMAプレミアム | A8.net | **未確認**（A8 の管理画面で要確認） |
+| `slot-compare` | `mma-live-streaming` | スカパー！ | もしも | **未確認**（もしもは登録状況も未確認） |
+| `slot-mid` | `mma-live-streaming` | ABEMAプレミアム | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-footer` | `mma-live-streaming` | ABEMAプレミアム | A8.net | **未確認**（A8 の管理画面で要確認） |
+| `slot-compare` | `music-live-streaming` | WOWOW | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-mid` | `music-live-streaming` | U-NEXT | afb | **未確認**（同上） |
+| `slot-footer` | `music-live-streaming` | WOWOW | もしも | **未確認**（もしもは登録状況も未確認） |
+| `slot-hero` | `npb-live-streaming` | スカパー！ | もしも | **未確認**（同上） |
+| `slot-compare` | `npb-live-streaming` | スカパー！ | もしも | **未確認**（同上） |
+| `slot-footer` | `npb-live-streaming` | ABEMAプレミアム | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-compare` | `npb-postseason-broadcast` | パ・リーグTV | **要確認（3社とも未確認）** | **未確認**。無ければ公式サイトへの通常リンクにする |
+| `slot-mid` | `npb-postseason-broadcast` | スカパー！ | もしも | **未確認**（もしもは登録状況も未確認） |
+| `slot-footer` | `npb-postseason-broadcast` | ABEMAプレミアム | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-hero` | `pacific-league-tv-watch` | パ・リーグTV | **要確認（3社とも未確認）** | **未確認**。無ければ公式サイトへの通常リンクにする |
+| `slot-mid` | `pacific-league-tv-watch` | スカパー！ | もしも | **未確認**（もしもは登録状況も未確認） |
+| `slot-footer` | `pacific-league-tv-watch` | ABEMAプレミアム | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-hero` | `skyperfectv-baseball-review` | スカパー！ | もしも | **未確認**（もしもは登録状況も未確認） |
+| `slot-mid` | `skyperfectv-baseball-review` | スカパー！ | もしも | **未確認**（同上） |
+| `slot-footer` | `skyperfectv-baseball-review` | パ・リーグTV | **要確認（3社とも未確認）** | **未確認**。無ければ公式サイトへの通常リンクにする |
+| `slot-mid` | `soccer-free-broadcast` | ABEMAプレミアム | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-footer` | `soccer-free-broadcast` | ABEMAプレミアム | A8.net | **未確認**（A8 の管理画面で要確認） |
+| `slot-compare` | `soccer-streaming-services-hub` | ABEMAプレミアム／スカパー！ | afb／もしも | **未確認**（両社とも） |
+| `slot-footer` | `soccer-streaming-services-hub` | DMM TV | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-hero` | `sports-streaming-comparison` | ABEMAプレミアム | afb | **未確認**（同上） |
+| `slot-compare` | `sports-streaming-comparison` | スカパー！ | もしも | **未確認**（もしもは登録状況も未確認） |
+| `slot-footer` | `sports-streaming-comparison` | WOWOW | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-compare` | `sports-streaming-tv-setup` | スカパー！ | もしも | **未確認**（もしもは登録状況も未確認） |
+| `slot-mid` | `sports-streaming-tv-setup` | ABEMAプレミアム | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-footer` | `sports-streaming-tv-setup` | WOWOW | afb | **未確認**（同上） |
+| `slot-mid` | `streaming-price-basics` | ABEMAプレミアム | afb | **未確認**（同上） |
+| `slot-footer` | `streaming-price-basics` | U-NEXT | afb | **未確認**（同上） |
+| `slot-mid` | `tver-catchup-watch` | ABEMAプレミアム | afb | **未確認**（同上） |
+| `slot-footer` | `tver-catchup-watch` | U-NEXT | afb | **未確認**（同上） |
+| `slot-compare` | `unext-vs-hulu-price` | U-NEXT／Hulu | afb／afb | **未確認**（同上。この枠だけ afb 案件が2件入る） |
+| `slot-footer` | `unext-vs-hulu-price` | ABEMAプレミアム | afb | **未確認**（同上） |
+| `slot-compare` | `watch-on-tv` | スカパー！ | もしも | **未確認**（もしもは登録状況も未確認） |
+| `slot-mid` | `watch-on-tv` | ABEMAプレミアム | afb | **未確認**（本人が afb にログインして広告主検索で要確認） |
+| `slot-footer` | `watch-on-tv` | WOWOW | afb | **未確認**（同上） |
+
+**57行。上の 8-1 の内訳と一致します。**
+
+**DAZN・SPOTV NOW・Lemino・Prime Video・TVer には枠がありません。** DAZN は指定3ASPに無い見込みで `j-league-live-streaming` の `slot-hero` を置いていない、TVer は完全無料なので広告を置かない（§6）、残り3つは本文でそれらの料金を扱っていないためです（§5 の 2026-09-14 の注記）。
+
+### 8-3. 確認できたのは支払い条件だけ（出典つき）
+
+**afb の報酬支払い条件は公式トップページから取れました。**（出典: https://www.afi-b.com/ ・2026-09-20 確認）
+
+- **最低支払額**: 「未払い報酬金額の合計が777円(税抜)を超えた月の翌月末日に、ご指定金融口座にお振込みいたします。」／「最低報酬777円（税抜）」
+- **締め日・支払日**: 月末締め・**翌月末日**払い（「翌月末日のスピード支払い」）
+- **振込手数料**: 「振込手数料は成果報酬金額に関係なくafbが全額負担します。」＝**メディア側の負担なし**
+- **消費税**: 「消費税分の上乗せ支払い」という記載はある（出典: https://www.afi-b.com/pa/main のページ説明文・2026-09-20 確認）が、**計算方法・適用条件は未確認。** 詳細ページ（`/faq/about-commission/`・`/guide/payment/`）はこの環境からリダイレクトが繰り返されて読めなかった。
+
+**A8.net は「振込手数料はメディア会員負担」（`launch-checklist.md` #16）で条件が違います。** 混同しないこと。
+
+### 8-4. 本人がやること（afb にログインして5分）
+
+1. afb 管理画面にログイン（https://www.afi-b.com/pa/main ）
+2. **プロモーション検索（広告主検索）**を開く
+3. `ABEMA` / `WOWOW` / `U-NEXT` / `DMM TV` / `Hulu` / `パ・リーグTV` / `スカパー` / `DAZN` の順に検索する
+4. **あったもの**から、`afb-partner-plan.md` ①-1 の順（枠数の多い順＝ABEMAプレミアム → WOWOW → U-NEXT → Hulu → DMM TV）で**提携申請**を出す。**一度に全部出さない**（§6「無差別な大量提携申請」）
+5. **無かったもの**は `afb-partner-plan.md` ④ の振り分けに従う
+6. 結果を `afb-partner-plan.md` ①-1 の表と、上の 8-2 の「確認状況」列に書き込む（「あり（2026-MM-DD 確認）」／「afbに無し（2026-MM-DD 確認）」）
