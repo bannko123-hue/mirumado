@@ -485,7 +485,8 @@ grep -rn '<旧baseUrlのホスト名>' dist/          # 1件も出ないこと�
 | 文書 | 使う場面 |
 |---|---|
 | `docs/daily-operation.md` | **毎日開く。** 夜の巡回・仕分け・朝の執筆・公開・エラー対応 |
-| `docs/launch-checklist.md` | **公開前に1回。** ドメイン・ホスティング・Search Console・ASP。順番つき |
+| `docs/launch-checklist.md` | **公開前に1回。** ドメイン・ホスティング・Search Console・ASP。順番つき。**公開には2ルートある**（GitHub 経由／zip 直接アップロード） |
+| `docs/publish-direct-upload.md` | **GitHub を使わずに zip で公開する手順（2026-09-24 新設）。** GitHub 接続が詰まっている現状での最短ルート。**「直接アップロードは後から Git 連携に切り替えられない」という制約（§1）を選ぶ前に読むこと。** `【要記入】` 5箇所の出現場所と直す元ファイルの対応表（§4）もここ |
 | `docs/ad-placement.md` | **提携が通るたびに開く。** どの記事のどの枠に何を貼るか |
 | `docs/afb-partner-plan.md` | **afb の提携申請とタグ貼りの作業リスト（2026-09-20 新設）。** 申請の順番・承認が下りたら貼る場所（記事slug／枠ID／見出し）・afb の支払い条件 |
 | `docs/handover.md`（この文書） | **月1で読み直す。** 決まっていること・未確認の残り・期限 |
