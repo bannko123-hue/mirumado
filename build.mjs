@@ -1289,8 +1289,9 @@ ${breadcrumb(crumbs)}
 function buildAbout(site) {
   // ---- 本人にしか書けない項目 --------------------------------------------
   // 運営者名: ハンドルネームで可。buildPolicy() の ownerName と必ず同じ表記にする。
-  // 埋めたら 【要記入】 を実際の名前に置き換えるだけでよい。
-  const ownerName = '【要記入】';
+  // 暫定でサイトの編集部名義にしてある。本人が本名や別の屋号を使いたくなったら、
+  // ここと buildPolicy() の ownerName の2行を同じ表記に差し替えるだけでよい。
+  const ownerName = 'みるまど編集部';
   // 連絡先は content/site.json の "contactEmail"（埋め方は同ファイルの _memo_contactEmail）。
   // 運営開始は content/site.json の "siteStarted"。
   const crumbs = [
@@ -1389,12 +1390,20 @@ function analyticsParagraphs(site) {
 function buildPolicy(site) {
   // ---- 本人にしか書けない項目 --------------------------------------------
   // 運営者名: ハンドルネームで可。buildAbout() の ownerName と必ず同じ表記にする。
-  const ownerName = '【要記入】';
-  // 所在地: 特定商取引法まわりで本人の情報が要る箇所。
-  //   個人の場合、都道府県までの記載＋「請求があった場合に遅滞なく開示します」の
-  //   但し書きで運用する例が多いが、どこまで書くかは本人が決めること
+  // 暫定でサイトの編集部名義にしてある。本人が本名や別の屋号を使いたくなったら、
+  // ここと buildAbout() の ownerName の2行を同じ表記に差し替えるだけでよい。
+  const ownerName = 'みるまど編集部';
+  // 所在地: 空のあいだは住所の行そのものを出さず、
+  //   「請求があった場合に遅滞なく開示します」の一文だけを出す。
+  //   これは法的助言ではなく、個人運営のアフィリエイトサイトでよく取られている形に
+  //   合わせた暫定措置。ASP や取引先から住所の記載を求められたら、ここに住所を
+  //   書き込めば /policy/ の一覧に「所在地」の行が戻る
   //   （docs/launch-checklist.md #10 / #15）。
-  const ownerAddress = '【要記入】';
+  const ownerAddress = '';
+  const addressItem = ownerAddress ? `\n  <li>所在地: ${esc(ownerAddress)}</li>` : '';
+  const addressNote = ownerAddress
+    ? ''
+    : '\n<p>所在地については、法令に基づく請求があった場合に遅滞なく開示します。</p>';
   // 連絡先は content/site.json の "contactEmail"。
   // 制定日・最終改定日は content/site.json の "policyEstablished" / "policyUpdated"。
   //   このページの文面を直したら policyUpdated を必ず更新すること。
@@ -1414,11 +1423,10 @@ ${breadcrumb(crumbs)}
 <h2 id="h-1">運営者情報</h2>
 <ul>
   <li>サイト名: ${esc(site.name)}</li>
-  <li>運営者名（ハンドルネーム可）: ${esc(ownerName)}</li>
-  <li>所在地: ${esc(ownerAddress)}（法令上の請求があった場合に遅滞なく開示します）</li>
+  <li>運営者名（ハンドルネーム可）: ${esc(ownerName)}</li>${addressItem}
   <li>連絡先: ${esc(site.contactEmail || '【要記入】')}</li>
   <li>お問い合わせ方法: 上記のメールアドレス宛にご連絡ください。メールフォームは設置していません。</li>
-</ul>
+</ul>${addressNote}
 
 <h2 id="h-2">広告・アフィリエイトプログラムについて（ステルスマーケティング規制への対応）</h2>
 <p>当サイトは、アフィリエイトプログラムを利用した広告を掲載する方針で運営しています。記事内の広告リンクを経由してサービスの申し込みや契約があった場合、当サイトは広告主またはアフィリエイトサービスプロバイダから成果報酬を受け取ることがあります。</p>
