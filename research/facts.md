@@ -180,7 +180,7 @@
 
 ## Hulu
 
-出典: Hulu公式ヘルプ「月額料金について」 https://help.hulu.jp/hc/ja/articles/360044165794 ／「月額料金改定のお知らせ」 https://help.hulu.jp/hc/ja/articles/59524415235865 ／「2週間無料トライアルの終了について」 https://help.hulu.jp/hc/ja/articles/20707421110425 ／ 確認日 2026-09-07
+出典: Hulu公式ヘルプ「月額料金について」 https://help.hulu.jp/hc/ja/articles/360044165794 ／「月額料金改定のお知らせ」 https://help.hulu.jp/hc/ja/articles/59524415235865 ／「2週間無料トライアルの終了について」 https://help.hulu.jp/hc/ja/articles/20707421110425 ／ 確認日 2026-09-07（**2026-09-26 に「月額料金について」と「2週間無料トライアルの終了について」の2ページを再確認／内容に変化なし**）
 
 | 確認できた事実 |
 |---|
