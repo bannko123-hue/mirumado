@@ -188,4 +188,4 @@ J SPORTSをさらに増やしたい場合は、プロ野球セットとの組み
 
 ::ad{id=slot-footer}
 
-球団から選ぶ考え方は[プロ野球中継をネットで見る方法](/baseball/npb-live-streaming/)と[プロ野球中継が見られる配信サービス一覧](/baseball/baseball-streaming-services-hub/)、パ・リーグ中心なら[パ・リーグTVの料金と対応デバイス](/baseball/pacific-league-tv-watch/)にまとめています。解約タイミングの共通ルールは[動画配信サービスの料金の仕組み](/compare/streaming-price-basics/)が対応します。
+球団から選ぶ考え方は[プロ野球中継をネットで見る方法](/baseball/npb-live-streaming/)と[プロ野球中継が見られる配信サービス一覧](/baseball/baseball-streaming-services-hub/)、パ・リーグ中心なら[パ・リーグTVの料金と対応デバイス](/baseball/pacific-league-tv-watch/)にまとめています。解約タイミングの共通ルールは[動画配信サービスの料金の仕組み](/compare/streaming-price-basics/)が対応します。J SPORTSを含まない50チャンネルの基本プランと、その半額キャンペーンは[スカパー！基本プランでプロ野球・スポーツは見られる？](/baseball/skyperfectv-basic-plan-sports/)で扱っています。

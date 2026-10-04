@@ -14,18 +14,18 @@
   "siteStarted": "2026年9月",
   "_memo_policyDates": "/policy/ の「制定・改定」に出る。policyUpdated は /policy/ の文面を直すたびに更新する。",
   "policyEstablished": "2026年9月15日",
-  "policyUpdated": "2026年9月15日",
+  "policyUpdated": "2026年10月4日",
   "_memo_analyticsTool": "アクセス解析ツールを導入したら、その名称をここに書く（例: Cloudflare Web Analytics / Google アナリティクス4）。空のあいだは /policy/ に「導入していない」と表示される。空でなくなると Cookie を使う旨の記述に自動で切り替わる。導入前にここへ書き込まないこと（事実と違う記載になる）。",
   "analyticsTool": "",
   "_memo_asp": "aspApplied は申請した（申請する予定の）ASP。aspApproved は提携が承認されて実際に広告を掲載しているASPだけを入れる。承認前に aspApproved へ入れないこと。/policy/ の広告の項目がこの2つで切り替わる。会員登録（メディア登録）が済んだだけの状態は aspRegistered に書く。登録と提携承認は別物なので、登録できても aspApproved には入れない。",
   "aspApplied": ["A8.net", "もしもアフィリエイト", "afb"],
   "_memo_aspRegistered": "ASP の会員登録（メディア登録）と媒体審査の状況。build.mjs は読まない（/policy/ の表示は aspApplied / aspApproved の2つだけで決まる）。mediaReview は媒体（サイト）の審査、approvedPrograms は個別の広告主との提携。媒体審査に通っても提携は0件のことがあるので、提携が承認されて実際にタグを貼ったときに初めて aspApproved に足す。",
   "aspRegistered": [
-    { "name": "A8.net", "date": "", "mediaReview": "通過済み", "approvedPrograms": 0, "note": "登録済み・審査通過済み。登録日は記録が無いため空。サイト登録（launch-checklist.md #17）と個別提携申請（#18）はまだ" },
+    { "name": "A8.net", "date": "", "mediaReview": "通過済み", "approvedPrograms": 1, "note": "登録済み・審査通過済み。登録日は記録が無いため空。2026-10-03 にサイト登録（launch-checklist.md #17）を済ませ、スカパー！との提携が承認された。skyperfectv-basic-plan-sports にスカパー！基本プランのタグ（素材ID 067）を掲載" },
     { "name": "afb", "date": "2026-09-20", "mediaReview": "通過済み（2026-09-20）", "approvedPrograms": 0, "note": "本人が https://www.afi-b.com/pa/main から登録し、同日に媒体審査通過との連絡。運営は株式会社フォーイット。個別の広告主への提携申請はこれから（docs/afb-partner-plan.md の順で出す）。申請時に登録した URL が https://mirumado.pages.dev だったかは未確認（サイトはまだ公開していない）。本人に要確認" },
     { "name": "もしもアフィリエイト", "date": "", "mediaReview": "未確認", "approvedPrograms": 0, "note": "状況未確認。以前URLを渡した段階までしか分かっていない。登録したかどうかから本人に要確認" }
   ],
-  "aspApproved": [],
+  "aspApproved": ["A8.net"],
   "twitter": "",
   "categories": [
     {
