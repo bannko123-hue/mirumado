@@ -95,10 +95,13 @@
       var a = list[i];
       html +=
         '<li class="card">' +
+        '<a class="card__thumb" href="' + escapeHtml(a.url) + '" tabindex="-1" aria-hidden="true"><img src="/assets/cat-' + escapeHtml(a.categorySlug) + '.svg" alt="" loading="lazy" width="640" height="320"></a>' +
+        '<div class="card__body">' +
         '<p class="card__cat"><a href="/' + escapeHtml(a.categorySlug) + '/">' + escapeHtml(a.category) + '</a></p>' +
         '<h3 class="card__title"><a href="' + escapeHtml(a.url) + '">' + highlight(a.title, ts) + '</a></h3>' +
         '<p class="card__desc">' + highlight(a.description, ts) + '</p>' +
         '<p class="card__meta"><time datetime="' + escapeHtml(a.updated) + '">' + escapeHtml(a.updated) + '</time> 更新</p>' +
+        '</div>' +
         '</li>';
     }
     results.innerHTML = html;

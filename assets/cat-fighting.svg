@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" preserveAspectRatio="xMidYMid slice" role="img" aria-label="格闘技のリングとグローブのイラスト">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#8b5cf6"/>
+      <stop offset="1" stop-color="#3b1d8f"/>
+    </linearGradient>
+    <radialGradient id="spot" cx=".5" cy="0" r=".9">
+      <stop offset="0" stop-color="#fff" stop-opacity=".35"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="640" height="320" fill="url(#g)"/>
+  <rect width="640" height="320" fill="url(#spot)"/>
+  <g stroke-width="7" stroke-linecap="round">
+    <path d="M20 150 H620" stroke="#ff5c7a"/>
+    <path d="M20 200 H620" stroke="#fff" stroke-opacity=".85"/>
+    <path d="M20 250 H620" stroke="#5cc8ff"/>
+  </g>
+  <rect x="40" y="110" width="16" height="190" rx="6" fill="#1b1240"/>
+  <rect x="584" y="110" width="16" height="190" rx="6" fill="#1b1240"/>
+  <g transform="translate(330 150) rotate(-14)">
+    <path d="M-70 -50 q0 -50 60 -50 h40 q60 0 60 60 v40 q0 40 -40 50 h-80 q-40 -6 -40 -50 z" fill="#ff3b52"/>
+    <path d="M-60 -40 q30 -10 60 0" stroke="#fff" stroke-opacity=".45" stroke-width="8" fill="none" stroke-linecap="round"/>
+    <path d="M30 -10 q30 0 40 25" stroke="#b81e33" stroke-width="7" fill="none" stroke-linecap="round"/>
+    <rect x="-66" y="54" width="104" height="44" rx="10" fill="#fff"/>
+    <rect x="-66" y="68" width="104" height="10" fill="#ff3b52"/>
+  </g>
+</svg>

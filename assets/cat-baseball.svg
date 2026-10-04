@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" preserveAspectRatio="xMidYMid slice" role="img" aria-label="野球のイラスト">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff8a3d"/>
+      <stop offset="1" stop-color="#d9382b"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="320" fill="url(#g)"/>
+  <path d="M0 320 L320 120 L640 320 Z" fill="#000" opacity=".08"/>
+  <g transform="translate(200 230) rotate(45)">
+    <rect x="-70" y="-70" width="140" height="140" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="5"/>
+    <rect x="-80" y="-80" width="20" height="20" fill="#fff" opacity=".85"/>
+    <rect x="60" y="-80" width="20" height="20" fill="#fff" opacity=".85"/>
+    <rect x="60" y="60" width="20" height="20" fill="#fff" opacity=".85"/>
+  </g>
+  <g transform="translate(470 150)">
+    <circle r="78" fill="#fff"/>
+    <path d="M-52 -58 q34 58 0 116 M52 -58 q-34 58 0 116" fill="none" stroke="#e23b3b" stroke-width="5"/>
+    <g stroke="#e23b3b" stroke-width="4" stroke-linecap="round">
+      <path d="M-46 -40 l-12 4 M-38 -20 l-13 2 M-36 0 h-13 M-38 20 l-13 -2 M-46 40 l-12 -4"/>
+      <path d="M46 -40 l12 4 M38 -20 l13 2 M36 0 h13 M38 20 l13 -2 M46 40 l12 -4"/>
+    </g>
+  </g>
+  <path d="M60 70 L330 40" stroke="#fff" stroke-opacity=".7" stroke-width="16" stroke-linecap="round"/>
+  <path d="M60 70 L120 63" stroke="#7a3b16" stroke-width="18" stroke-linecap="round"/>
+</svg>

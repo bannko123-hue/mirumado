@@ -806,36 +806,58 @@ function icon(name) {
   return `<span class="icon">${ICONS[name] || ICONS.dot}</span>`;
 }
 
+// カテゴリごとの見た目（バナー画像・テーマ色・ナビ用の小アイコン）。
+// 画像は assets/cat-<slug>.svg（オリジナルのイラスト。他社ロゴ・写真は使わない）。
+const CAT_THEME = {
+  soccer: { color: '#12a565', glyph: '<circle cx="12" cy="12" r="8.5"/><path d="M12 8.2l3.2 2.3-1.2 3.7h-4l-1.2-3.7z"/>' },
+  baseball: { color: '#e5532e', glyph: '<circle cx="12" cy="12" r="8.5"/><path d="M7.2 6.2q3 5.8 0 11.6M16.8 6.2q-3 5.8 0 11.6"/>' },
+  fighting: { color: '#7c4dff', glyph: '<path d="M6.5 10.5q0-5 5-5h2.5q4.5 0 4.5 5v2q0 3-3 3.5H9.5q-3-.5-3-3.5z"/><path d="M8.5 16h7v3.5h-7z"/>' },
+  entertainment: { color: '#e0418f', glyph: '<path d="M9.5 17.5V6.5l9-2v11"/><circle cx="7.5" cy="17.5" r="2"/><circle cx="16.5" cy="15.5" r="2"/>' },
+  compare: { color: '#3b6cff', glyph: '<rect x="3.5" y="5.5" width="7" height="13" rx="1.5"/><rect x="13.5" y="5.5" width="7" height="13" rx="1.5"/><path d="M15.5 12l1.5 1.5 2.5-3"/>' },
+};
+function catTheme(slug) {
+  return CAT_THEME[slug] || { color: '#3b6cff', glyph: '<circle cx="12" cy="12" r="8.5"/>' };
+}
+function catGlyph(slug) {
+  return `<svg class="catglyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${catTheme(slug).glyph}</svg>`;
+}
+function catImage(slug) {
+  return CAT_THEME[slug] ? `/assets/cat-${slug}.svg` : '/assets/cat-compare.svg';
+}
+
 function absUrl(site, p) {
   return `${site.baseUrl}${p}`;
 }
 
-function header(site) {
-  const navLinks = site.nav
-    .map((n) => `<a href="${attr(n.href)}">${esc(n.label)}</a>`)
-    .join('\n        ');
+function header(site, current = '') {
   const cats = site.categories
-    .map((c) => `<a href="/${c.slug}/">${esc(c.name)}</a>`)
+    .map(
+      (c) =>
+        `<a class="catbar__item" href="/${c.slug}/" style="--cat:${catTheme(c.slug).color}"${
+          current === c.slug ? ' aria-current="page"' : ''
+        }>${catGlyph(c.slug)}<span>${esc(c.name)}</span></a>`
+    )
     .join('\n        ');
-  return `<header class="site-header">
-  <div class="wrap">
-    <div class="site-header__top">
-      <a class="site-title" href="/">${esc(site.name)}</a>
-      <form class="searchbox" action="/search/" method="get" role="search">
-        <label class="visually-hidden" for="q">サイト内検索</label>
-        <input type="search" id="q" name="q" placeholder="例: Jリーグ 配信" autocomplete="off">
-        <button type="submit">検索</button>
-      </form>
-    </div>
-    <nav class="site-nav" aria-label="カテゴリ">
-      <div class="site-nav__cats">
-        ${cats}
-      </div>
-      <div class="site-nav__pages">
-        ${navLinks}
-      </div>
-    </nav>
+  return `<header class="site-header" data-header>
+  <div class="wrap wrap--wide site-header__bar">
+    <a class="brand" href="/">
+      <img class="brand__logo" src="/assets/logo.svg" width="36" height="36" alt="">
+      <span class="brand__text"><span class="brand__name">${esc(site.name)}</span><span class="brand__sub">試合・番組の「どこで見る？」がわかる</span></span>
+    </a>
+    <form class="searchbox" action="/search/" method="get" role="search">
+      <label class="visually-hidden" for="q">サイト内検索</label>
+      <svg class="searchbox__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg>
+      <input type="search" id="q" name="q" placeholder="例: Jリーグ 配信" autocomplete="off">
+      <button type="submit">検索</button>
+    </form>
   </div>
+  <nav class="catbar" aria-label="カテゴリ">
+    <div class="wrap wrap--wide catbar__inner">
+      <a class="catbar__item catbar__item--home" href="/"${current === 'home' ? ' aria-current="page"' : ''}><svg class="catglyph" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 11l8-6.5 8 6.5M6.5 9.5V19h11V9.5"/></svg><span>ホーム</span></a>
+        ${cats}
+    </div>
+  </nav>
+  <div class="progress" aria-hidden="true"><span class="progress__bar"></span></div>
 </header>`;
 }
 
@@ -848,7 +870,11 @@ function footer(site) {
     .join('\n          ');
   const year = new Date().getFullYear();
   return `<footer class="site-footer">
-  <div class="wrap">
+  <div class="wrap wrap--wide">
+    <div class="site-footer__brand">
+      <a class="brand brand--footer" href="/"><img class="brand__logo" src="/assets/logo.svg" width="32" height="32" alt=""><span class="brand__text"><span class="brand__name">${esc(site.name)}</span></span></a>
+      <p>${esc(site.tagline || '')}</p>
+    </div>
     <p class="site-footer__disclosure">${esc(site.adDisclosure)}表示している料金・配信予定は各サービスの公式ページで確認した時点の情報です。最新の内容は必ず公式サイトでご確認ください。</p>
     <div class="site-footer__cols">
       <nav aria-label="カテゴリ一覧">
@@ -888,6 +914,7 @@ function layout(site, opts) {
     bodyClass = '',
     extraHead = '',
     scripts = '',
+    current = '',
   } = opts;
   const fullTitle = opts.rawTitle ? title : `${title} | ${site.name}`;
   const canonical = absUrl(site, url);
@@ -909,16 +936,21 @@ function layout(site, opts) {
 <meta name="twitter:title" content="${attr(fullTitle)}">
 <meta name="twitter:description" content="${attr(description)}">
 <link rel="alternate" type="application/rss+xml" title="${attr(site.name)} の新着記事" href="/feed.xml">
+<meta name="theme-color" content="#3b6cff">
+<link rel="icon" href="/assets/logo.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/assets/style.css">
+<script>document.documentElement.classList.add('js')</script>
 ${extraHead}${jsonLd.map(jsonLdScript).join('\n')}
 </head>
 <body${bodyClass ? ` class="${attr(bodyClass)}"` : ''}>
 <a class="skip-link" href="#main">本文へスキップ</a>
-${header(site)}
+${header(site, current)}
 <main id="main">
 ${main}
 </main>
 ${footer(site)}
+<a class="to-top" href="#main" aria-label="ページの先頭へ戻る"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 14l6-6 6 6"/></svg></a>
+<script src="/assets/site.js" defer></script>
 ${scripts}
 </body>
 </html>
@@ -955,11 +987,14 @@ function breadcrumbJsonLd(site, items) {
 function articleCard(a, opts = {}) {
   const dateLabel = opts.showUpdated === false ? '' :
     `<p class="card__meta"><time datetime="${attr(a.updated)}">${jpDate(a.updated)}</time> 更新</p>`;
-  return `<li class="card">
-  <p class="card__cat"><a href="/${a.category.slug}/">${esc(a.category.name)}</a></p>
-  <h3 class="card__title"><a href="${attr(a.url)}">${esc(a.title)}</a></h3>
-  <p class="card__desc">${esc(a.description)}</p>
-  ${dateLabel}
+  return `<li class="card reveal${opts.featured ? ' card--featured' : ''}" style="--cat:${catTheme(a.category.slug).color}">
+  <a class="card__thumb" href="${attr(a.url)}" tabindex="-1" aria-hidden="true"><img src="${catImage(a.category.slug)}" alt="" loading="lazy" width="640" height="320"></a>
+  <div class="card__body">
+    <p class="card__cat"><a href="/${a.category.slug}/">${catGlyph(a.category.slug)}${esc(a.category.name)}</a></p>
+    <h3 class="card__title"><a href="${attr(a.url)}">${esc(a.title)}</a></h3>
+    <p class="card__desc">${esc(a.description)}</p>
+    ${dateLabel}
+  </div>
 </li>`;
 }
 
@@ -973,11 +1008,12 @@ function buildHome(site, articles) {
 
   const entryPoints = site.entryPoints
     .map(
-      (e) => `<li class="entry-point">
+      (e) => `<li class="entry-point reveal">
   <a href="${attr(e.href)}">
     ${icon(e.icon)}
     <span class="entry-point__label">${esc(e.label)}</span>
     <span class="entry-point__note">${esc(e.note || '')}</span>
+    <span class="entry-point__arrow" aria-hidden="true">→</span>
   </a>
 </li>`
     )
@@ -986,28 +1022,69 @@ function buildHome(site, articles) {
   const cats = site.categories
     .map((c) => {
       const n = articles.filter((a) => a.category.slug === c.slug).length;
-      return `<li class="cat-card">
-  <h3><a href="/${c.slug}/">${esc(c.name)}</a></h3>
-  <p>${esc(c.description || '')}</p>
-  <p class="cat-card__count">${n} 記事</p>
+      return `<li class="cat-card reveal" style="--cat:${catTheme(c.slug).color}">
+  <a href="/${c.slug}/">
+    <span class="cat-card__img"><img src="${catImage(c.slug)}" alt="" loading="lazy" width="640" height="320"></span>
+    <span class="cat-card__body">
+      <span class="cat-card__name">${catGlyph(c.slug)}${esc(c.name)}</span>
+      <span class="cat-card__desc">${esc(c.description || '')}</span>
+      <span class="cat-card__count">${n} 記事 →</span>
+    </span>
+  </a>
 </li>`;
     })
     .join('\n');
 
-  const latest = byPublished.slice(0, site.homeLatestCount).map((a) => articleCard(a)).join('\n');
+  // ヒーロー下に流す「扱っているサービス」。記事本文に実際に出てくる名前だけを出す。
+  const SERVICE_CANDIDATES = ['DAZN', 'U-NEXT', 'ABEMA', 'Hulu', 'WOWOW', 'スカパー！', 'J SPORTS', 'パ・リーグTV', 'Lemino', 'TVer', 'DMM TV', 'Amazon Prime Video', 'Netflix', 'NHKプラス'];
+  const corpus = articles.map((a) => `${a.title} ${a.description} ${a.plainText}`).join(' ');
+  const services = SERVICE_CANDIDATES.filter((s) => corpus.includes(s));
+  const chips = services
+    .map((s) => `<a class="chip" href="/search/?q=${encodeURIComponent(s)}">${esc(s)}</a>`)
+    .join('');
+  const marquee = services.length
+    ? `<div class="marquee" aria-label="このサイトで扱っている配信サービス">
+  <div class="marquee__track">${chips}<span class="marquee__dup" aria-hidden="true">${chips.replace(/<a /g, '<a tabindex="-1" ')}</span></div>
+</div>`
+    : '';
+
+  const [first, ...rest] = byPublished.slice(0, site.homeLatestCount);
+  const latest = first
+    ? [articleCard(first, { featured: true }), ...rest.map((a) => articleCard(a))].join('\n')
+    : '';
   const updated = byUpdated.slice(0, site.homeUpdatedCount).map((a) => articleCard(a)).join('\n');
 
   const main = `<section class="hero">
-  <div class="wrap">
-    <h1>${esc(site.name)}</h1>
-    <p class="hero__tagline">${esc(site.tagline || site.description || '')}</p>
-    <p class="hero__note">${esc(site.adDisclosure)}</p>
+  <div class="hero__bg" aria-hidden="true"><span></span><span></span><span></span></div>
+  <div class="wrap wrap--wide hero__inner">
+    <div class="hero__text">
+      <p class="hero__eyebrow"><span class="hero__dot" aria-hidden="true"></span>スポーツ・エンタメの配信ガイド</p>
+      <h1 class="hero__title">その試合、<br><span class="hero__accent">どこで見られる？</span></h1>
+      <p class="hero__tagline">${esc(site.tagline || site.description || '')}</p>
+      <div class="hero__cta">
+        <a class="btn btn--primary" href="/compare/">配信サービスを比べる<span aria-hidden="true">→</span></a>
+        <a class="btn btn--ghost" href="/search/?q=無料">無料で見る方法</a>
+      </div>
+      <ul class="hero__stats">
+        <li><strong>${articles.length}</strong><span>本の視聴ガイド</span></li>
+        <li><strong>${site.categories.length}</strong><span>ジャンル</span></li>
+        <li><strong>公式</strong><span>ページで確認</span></li>
+      </ul>
+      <p class="hero__note">${esc(site.adDisclosure)}</p>
+    </div>
+    <div class="hero__art">
+      <img src="/assets/hero.svg" alt="" width="560" height="440">
+    </div>
   </div>
+  ${marquee}
 </section>
 
 <section class="section">
-  <div class="wrap">
-    <h2>目的から探す</h2>
+  <div class="wrap wrap--wide">
+    <div class="section__head">
+      <p class="section__eyebrow">FIND</p>
+      <h2>目的から探す</h2>
+    </div>
     <ul class="entry-points">
 ${entryPoints}
     </ul>
@@ -1015,25 +1092,59 @@ ${entryPoints}
 </section>
 
 <section class="section">
-  <div class="wrap">
-    <h2>カテゴリから探す</h2>
+  <div class="wrap wrap--wide">
+    <div class="section__head">
+      <p class="section__eyebrow">CATEGORY</p>
+      <h2>ジャンルから探す</h2>
+    </div>
     <ul class="cat-cards">
 ${cats}
     </ul>
   </div>
 </section>
 
-<section class="section">
-  <div class="wrap">
-    <h2>新着記事</h2>
-    ${latest ? `<ul class="cards">\n${latest}\n</ul>` : '<p class="empty">まだ記事がありません。</p>'}
+<section class="section section--steps">
+  <div class="wrap wrap--wide">
+    <div class="section__head">
+      <p class="section__eyebrow">HOW TO</p>
+      <h2>迷ったら、この3ステップ</h2>
+    </div>
+    <ol class="steps">
+      <li class="step reveal"><span class="step__num">1</span><h3>見たいものを決める</h3><p>試合・大会・番組を決めて、ジャンルのページを開きます。</p></li>
+      <li class="step reveal"><span class="step__num">2</span><h3>配信先を確かめる</h3><p>記事の比較表で、どのサービスなら見られるか・料金の違いを確認します。</p></li>
+      <li class="step reveal"><span class="step__num">3</span><h3>公式で条件を見て申し込む</h3><p>無料期間や支払い方法は変わることがあるので、最後は公式サイトで確認します。</p></li>
+    </ol>
+    <p class="steps__cta"><a class="btn btn--primary" href="/compare/">まずはサービス比較から<span aria-hidden="true">→</span></a></p>
   </div>
 </section>
 
 <section class="section">
-  <div class="wrap">
-    <h2>最近更新した記事</h2>
-    ${updated ? `<ul class="cards">\n${updated}\n</ul>` : '<p class="empty">まだ記事がありません。</p>'}
+  <div class="wrap wrap--wide">
+    <div class="section__head">
+      <p class="section__eyebrow">NEW</p>
+      <h2>新着記事</h2>
+    </div>
+    ${latest ? `<ul class="cards cards--grid">\n${latest}\n</ul>` : '<p class="empty">まだ記事がありません。</p>'}
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap wrap--wide">
+    <div class="section__head">
+      <p class="section__eyebrow">UPDATED</p>
+      <h2>最近更新した記事</h2>
+    </div>
+    ${updated ? `<ul class="cards cards--rail">\n${updated}\n</ul>` : '<p class="empty">まだ記事がありません。</p>'}
+  </div>
+</section>
+
+<section class="section">
+  <div class="wrap wrap--wide">
+    <ul class="trust">
+      <li class="reveal"><strong>公式ページで確認</strong><span>料金・配信予定は各サービスの公式ページで確かめた内容だけを載せています。</span></li>
+      <li class="reveal"><strong>確認日と出典を明記</strong><span>記事ごとに最終更新日と、確認した公式ページへのリンクを付けています。</span></li>
+      <li class="reveal"><strong>広告は広告と表示</strong><span>アフィリエイト広告を含む記事には、そのことを明記しています。</span></li>
+    </ul>
   </div>
 </section>`;
 
@@ -1063,6 +1174,7 @@ ${cats}
     main,
     jsonLd: [websiteLd],
     bodyClass: 'page-home',
+    current: 'home',
   });
 }
 
@@ -1128,12 +1240,13 @@ ${related.map((r) => articleCard(r)).join('\n')}
 
   const isUpdated = a.updated !== a.published;
 
-  const main = `<div class="wrap">
+  const main = `<div class="article-banner" style="--cat:${catTheme(a.category.slug).color}" aria-hidden="true"><img src="${catImage(a.category.slug)}" alt="" width="640" height="320"></div>
+<div class="wrap">
 ${breadcrumb(crumbs)}
 
 <article class="article">
   <header class="article__header">
-    <p class="article__cat"><a href="/${a.category.slug}/">${esc(a.category.name)}</a></p>
+    <p class="article__cat" style="--cat:${catTheme(a.category.slug).color}"><a href="/${a.category.slug}/">${catGlyph(a.category.slug)}${esc(a.category.name)}</a></p>
     <h1>${esc(a.title)}</h1>
     <p class="article__lead">${esc(a.description)}</p>
     <div class="article__dates">
@@ -1153,6 +1266,15 @@ ${a.contentHtml}
 
 ${sourcesHtml}
 </article>
+
+<aside class="next-cta reveal" aria-label="次に読む">
+  <img src="/assets/cat-compare.svg" alt="" width="640" height="320" loading="lazy">
+  <div>
+    <p class="next-cta__eyebrow">どれにするか迷ったら</p>
+    <p class="next-cta__title">配信サービスを料金・見られる競技で比べる</p>
+    <a class="btn btn--primary" href="/compare/">サービス比較を見る<span aria-hidden="true">→</span></a>
+  </div>
+</aside>
 
 ${relatedHtml}
 </div>`;
@@ -1195,6 +1317,7 @@ ${relatedHtml}
     main,
     jsonLd: ld,
     bodyClass: 'page-article',
+    current: a.category.slug,
   });
 }
 
@@ -1208,16 +1331,21 @@ function buildCategory(site, category, articles) {
     { label: category.name, href: `/${category.slug}/` },
   ];
 
-  const main = `<div class="wrap">
+  const main = `<section class="cat-hero" style="--cat:${catTheme(category.slug).color}">
+  <div class="wrap wrap--wide cat-hero__inner">
+    <div class="cat-hero__text">
 ${breadcrumb(crumbs)}
-<header class="page-header">
-  <h1>${esc(category.name)}の記事</h1>
-  <p>${esc(category.description || '')}</p>
-  <p class="page-header__count">${list.length} 記事</p>
-</header>
+      <h1>${catGlyph(category.slug)}${esc(category.name)}の記事</h1>
+      <p>${esc(category.description || '')}</p>
+      <p class="cat-hero__count">${list.length} 記事</p>
+    </div>
+    <img class="cat-hero__img" src="${catImage(category.slug)}" alt="" width="640" height="320">
+  </div>
+</section>
+<div class="wrap wrap--wide">
 ${
   list.length
-    ? `<ul class="cards">\n${list.map((a) => articleCard(a)).join('\n')}\n</ul>`
+    ? `<ul class="cards cards--grid">\n${list.map((a) => articleCard(a)).join('\n')}\n</ul>`
     : '<p class="empty">このカテゴリの記事はまだありません。<a href="/">トップページ</a>から他のカテゴリをご覧ください。</p>'
 }
 </div>`;
@@ -1229,6 +1357,7 @@ ${
     main,
     jsonLd: [breadcrumbJsonLd(site, crumbs)],
     bodyClass: 'page-category',
+    current: category.slug,
   });
 }
 

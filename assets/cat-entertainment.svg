@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 320" preserveAspectRatio="xMidYMid slice" role="img" aria-label="音楽ライブのマイクと音符のイラスト">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff5fa2"/>
+      <stop offset="1" stop-color="#8a2be2"/>
+    </linearGradient>
+    <linearGradient id="beam" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".45"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="320" fill="url(#g)"/>
+  <path d="M120 0 L40 320 H220 Z" fill="url(#beam)"/>
+  <path d="M520 0 L420 320 H600 Z" fill="url(#beam)"/>
+  <g fill="#fff" opacity=".18">
+    <circle cx="60" cy="300" r="22"/><circle cx="110" cy="296" r="22"/><circle cx="160" cy="302" r="22"/>
+    <circle cx="210" cy="296" r="22"/><circle cx="430" cy="300" r="22"/><circle cx="480" cy="295" r="22"/><circle cx="530" cy="301" r="22"/><circle cx="580" cy="296" r="22"/>
+  </g>
+  <g transform="translate(320 150) rotate(18)">
+    <rect x="-14" y="30" width="28" height="110" rx="12" fill="#1d1533"/>
+    <circle r="54" fill="#e9e6f5"/>
+    <g stroke="#9c95b8" stroke-width="3">
+      <path d="M-50 -10 H50 M-50 10 H50 M-40 -30 H40 M-40 30 H40"/>
+    </g>
+    <rect x="-56" y="22" width="112" height="16" rx="8" fill="#ffcf3d"/>
+  </g>
+  <g fill="#fff">
+    <path d="M470 80 v60 a16 16 0 1 1 -8 -14 v-58 l46 -12 v58 a16 16 0 1 1 -8 -14 v-34 z"/>
+    <path d="M150 90 v52 a14 14 0 1 1 -7 -12 v-52 h34 v10 z" opacity=".9"/>
+  </g>
+</svg>

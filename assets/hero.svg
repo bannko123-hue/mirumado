@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 440" role="img" aria-label="テレビの窓からスポーツや音楽ライブがのぞくイラスト">
+  <style>
+    .f1{animation:f 6s ease-in-out infinite}
+    .f2{animation:f 7s ease-in-out -2s infinite}
+    .f3{animation:f 5.5s ease-in-out -1s infinite}
+    .pulse{animation:p 2.4s ease-in-out infinite;transform-origin:280px 200px}
+    .beam{animation:b 4s ease-in-out infinite;transform-origin:120px 40px}
+    .beam2{animation:b 4.6s ease-in-out -1.5s infinite;transform-origin:440px 40px}
+    .live{animation:l 1.4s steps(2) infinite}
+    @keyframes f{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+    @keyframes p{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+    @keyframes b{0%,100%{transform:rotate(-6deg)}50%{transform:rotate(6deg)}}
+    @keyframes l{50%{opacity:.25}}
+    @media (prefers-reduced-motion:reduce){*{animation:none!important}}
+  </style>
+  <defs>
+    <linearGradient id="scr" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#1b2a6b"/>
+      <stop offset="1" stop-color="#3a1f7a"/>
+    </linearGradient>
+    <linearGradient id="pitch" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2fbf71"/>
+      <stop offset="1" stop-color="#16884c"/>
+    </linearGradient>
+    <linearGradient id="beamg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".55"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+    <clipPath id="clip"><rect x="80" y="70" width="400" height="250" rx="22"/></clipPath>
+  </defs>
+
+  <!-- 背景の円 -->
+  <circle cx="280" cy="210" r="200" fill="#fff" opacity=".12"/>
+  <circle cx="280" cy="210" r="150" fill="#fff" opacity=".1"/>
+
+  <!-- テレビ（窓） -->
+  <rect x="64" y="54" width="432" height="282" rx="30" fill="#0f1533"/>
+  <g clip-path="url(#clip)">
+    <rect x="80" y="70" width="400" height="250" fill="url(#scr)"/>
+    <!-- 照明 -->
+    <path class="beam" d="M120 40 L60 330 L190 330 Z" fill="url(#beamg)" opacity=".5"/>
+    <path class="beam2" d="M440 40 L370 330 L500 330 Z" fill="url(#beamg)" opacity=".5"/>
+    <!-- 客席 -->
+    <g fill="#ffffff" opacity=".12">
+      <circle cx="110" cy="205" r="6"/><circle cx="130" cy="200" r="6"/><circle cx="150" cy="206" r="6"/>
+      <circle cx="170" cy="199" r="6"/><circle cx="190" cy="205" r="6"/><circle cx="370" cy="204" r="6"/>
+      <circle cx="390" cy="199" r="6"/><circle cx="410" cy="205" r="6"/><circle cx="430" cy="200" r="6"/><circle cx="450" cy="206" r="6"/>
+    </g>
+    <!-- ピッチ -->
+    <path d="M80 230 L480 230 L480 320 L80 320 Z" fill="url(#pitch)"/>
+    <path d="M80 230 L480 230" stroke="#fff" stroke-opacity=".6" stroke-width="2"/>
+    <path d="M280 230 V320" stroke="#fff" stroke-opacity=".5" stroke-width="2"/>
+    <ellipse cx="280" cy="268" rx="46" ry="16" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="2"/>
+    <!-- 再生ボタン -->
+    <g class="pulse">
+      <circle cx="280" cy="170" r="42" fill="#fff" opacity=".95"/>
+      <path d="M268 150 v40 l34 -20 z" fill="#3b4fff"/>
+    </g>
+    <!-- LIVE -->
+    <rect x="100" y="88" width="74" height="26" rx="8" fill="#ff3b5c"/>
+    <circle class="live" cx="116" cy="101" r="5" fill="#fff"/>
+    <text x="128" y="106" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#fff">LIVE</text>
+    <!-- シークバー -->
+    <rect x="100" y="296" width="360" height="6" rx="3" fill="#fff" opacity=".3"/>
+    <rect x="100" y="296" width="230" height="6" rx="3" fill="#ffcf3d"/>
+    <circle cx="330" cy="299" r="8" fill="#fff"/>
+  </g>
+  <!-- スタンド -->
+  <path d="M240 336 h80 l14 34 h-108 z" fill="#0f1533"/>
+  <rect x="190" y="368" width="180" height="12" rx="6" fill="#0f1533"/>
+
+  <!-- 浮かぶアイテム -->
+  <g class="f1">
+    <circle cx="70" cy="300" r="34" fill="#fff"/>
+    <path d="M70 284 l13 9 -5 15 h-16 l-5 -15 z" fill="#1b1f3b"/>
+    <path d="M70 284 v-14 M83 293 l14 -4 M78 308 l8 13 M62 308 l-8 13 M57 293 l-14 -4" stroke="#1b1f3b" stroke-width="3"/>
+  </g>
+  <g class="f2">
+    <circle cx="500" cy="96" r="30" fill="#fff"/>
+    <path d="M482 78 q12 18 0 36 M518 78 q-12 18 0 36" fill="none" stroke="#ff4f4f" stroke-width="3" stroke-dasharray="4 3"/>
+  </g>
+  <g class="f3">
+    <circle cx="512" cy="300" r="30" fill="#ffcf3d"/>
+    <path d="M504 286 v24 a7 7 0 1 1 -4 -6 v-22 l20 -5 v22 a7 7 0 1 1 -4 -6 v-14 z" fill="#1b1f3b"/>
+  </g>
+  <g class="f2" fill="#fff">
+    <path d="M40 120 l5 12 12 5 -12 5 -5 12 -5 -12 -12 -5 12 -5z" opacity=".9"/>
+    <path d="M540 200 l3 8 8 3 -8 3 -3 8 -3 -8 -8 -3 8 -3z" opacity=".8"/>
+  </g>
+</svg>
