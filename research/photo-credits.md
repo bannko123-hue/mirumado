@@ -6,7 +6,7 @@
 
 | ファイル | ライセンス | 元サイト | 元タイトル | 元URL |
 |---|---|---|---|---|
-| photo-soccer-1.jpg | CC0 | flickr | Estadio Santiago Bernabéu, Madrid Spain | https://live.staticflickr.com/7321/13397525344_361041ecc5_b.jpg |
+| photo-soccer-1.jpg | CC0 | rawpixel | Soccer ball grass field（photo-soccer-2.jpg と同じ元写真をボール周辺で切り抜き・左右反転・1024x576 にリサイズした派生画像） | https://images.rawpixel.com/editor_1024/cHJpdmF0ZS9zdGF0aWMvaW1hZ2Uvd2Vic2l0ZS8yMDIyLTA0L2xyL3B4MTMzMjkxOC1pbWFnZS1rd3Z3MHhoMy5qcGc.jpg ／ 2026-10-04 差し替え（旧: 実在クラブのスタジアムでクラブ装飾・スポンサー看板が写っていたため） |
 | photo-soccer-2.jpg | CC0 | rawpixel | Soccer ball grass field | https://images.rawpixel.com/editor_1024/cHJpdmF0ZS9zdGF0aWMvaW1hZ2Uvd2Vic2l0ZS8yMDIyLTA0L2xyL3B4MTMzMjkxOC1pbWFnZS1rd3Z3MHhoMy5qcGc.jpg |
 | photo-soccer-3.jpg | CC0 | stocksnap | Still Items | https://cdn.stocksnap.io/img-thumbs/960w/KTQZYM7YXM.jpg |
 | photo-baseball-1.jpg | CC0 | rawpixel | Free baseball glove grass closeup | https://images.rawpixel.com/editor_1024/czNmcy1wcml2YXRlL3Jhd3BpeGVsX2ltYWdlcy93ZWJzaXRlX2NvbnRlbnQvbHIvcHg2MTQ0NDgtaW1hZ2Uta3d2eG13MWIuanBn.jpg |
