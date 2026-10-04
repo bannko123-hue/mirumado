@@ -1816,3 +1816,11 @@ mark {
   font-weight: 800;
 }
 .preview__slide.is-active .preview__info > :nth-child(5) { transition-delay: 0.42s; }
+
+/* フッターのロゴ文字は明るい背景なので通常色に戻す */
+.site-footer .brand__name {
+  background: none;
+  -webkit-background-clip: border-box;
+  background-clip: border-box;
+  color: var(--text);
+}
