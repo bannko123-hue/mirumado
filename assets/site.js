@@ -46,6 +46,87 @@
     inner.scrollLeft = current.offsetLeft - 16;
   }
 
+  // ---- トップのプレビュー（自動で切り替わる大バナー） ----
+  var preview = document.querySelector('[data-preview]');
+  if (preview) {
+    var slides = preview.querySelectorAll('.preview__slide');
+    var dots = preview.querySelectorAll('.preview__dot');
+    var pauseBtn = preview.querySelector('.preview__pause');
+    var idx = 0;
+    var timer = null;
+    var paused = reduce; // 動きを減らす設定なら自動送りしない
+    var DURATION = 6500;
+    preview.style.setProperty('--dur', DURATION + 'ms');
+
+    var show = function (n) {
+      idx = (n + slides.length) % slides.length;
+      for (var k = 0; k < slides.length; k++) {
+        var on = k === idx;
+        slides[k].classList.toggle('is-active', on);
+        if (on) slides[k].removeAttribute('aria-hidden');
+        else slides[k].setAttribute('aria-hidden', 'true');
+        var links = slides[k].querySelectorAll('a');
+        for (var m = 0; m < links.length; m++) {
+          if (on) links[m].removeAttribute('tabindex');
+          else links[m].setAttribute('tabindex', '-1');
+        }
+        if (dots[k]) {
+          dots[k].classList.remove('is-active');
+          if (on) {
+            void dots[k].offsetWidth; // 進み具合アニメーションを最初から
+            dots[k].classList.add('is-active');
+          }
+        }
+      }
+    };
+    var start = function () {
+      clearInterval(timer);
+      if (!paused && slides.length > 1) timer = setInterval(function () { show(idx + 1); }, DURATION);
+    };
+    for (var d = 0; d < dots.length; d++) {
+      dots[d].addEventListener('click', function () {
+        show(parseInt(this.getAttribute('data-go'), 10));
+        start();
+      });
+    }
+    if (pauseBtn) {
+      if (paused) {
+        pauseBtn.setAttribute('aria-pressed', 'true');
+        preview.classList.add('is-paused');
+      }
+      pauseBtn.addEventListener('click', function () {
+        paused = !paused;
+        pauseBtn.setAttribute('aria-pressed', paused ? 'true' : 'false');
+        pauseBtn.setAttribute('aria-label', paused ? '自動切り替えを再開' : '自動切り替えを一時停止');
+        preview.classList.toggle('is-paused', paused);
+        start();
+      });
+    }
+    preview.addEventListener('mouseenter', function () { clearInterval(timer); preview.classList.add('is-hover'); });
+    preview.addEventListener('mouseleave', function () { preview.classList.remove('is-hover'); start(); });
+    // スワイプで送る
+    var sx = null;
+    preview.addEventListener('touchstart', function (e) { sx = e.touches[0].clientX; }, { passive: true });
+    preview.addEventListener('touchend', function (e) {
+      if (sx === null) return;
+      var dx = e.changedTouches[0].clientX - sx;
+      if (Math.abs(dx) > 40) { show(idx + (dx < 0 ? 1 : -1)); start(); }
+      sx = null;
+    });
+    document.addEventListener('visibilitychange', function () { if (document.hidden) clearInterval(timer); else start(); });
+    start();
+  }
+
+  // ---- 横一列のサムネ: 左右ボタンでスクロール ----
+  var navs = document.querySelectorAll('.row__nav');
+  for (var r = 0; r < navs.length; r++) {
+    navs[r].addEventListener('click', function () {
+      var track = this.parentNode.querySelector('.row__track');
+      var dir = parseInt(this.getAttribute('data-dir'), 10);
+      track.scrollBy({ left: dir * track.clientWidth * 0.85, behavior: reduce ? 'auto' : 'smooth' });
+    });
+  }
+
   var items = document.querySelectorAll('.reveal');
   if (reduce || !('IntersectionObserver' in window)) {
     for (var i = 0; i < items.length; i++) items[i].classList.add('is-visible');

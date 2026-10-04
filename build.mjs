@@ -825,6 +825,86 @@ function catImage(slug) {
   return CAT_THEME[slug] ? `/assets/cat-${slug}.svg` : '/assets/cat-compare.svg';
 }
 
+// 記事サムネ: assets/photo-<カテゴリslug>-<番号>.(jpg|webp|png) があれば写真を使い、
+// 無ければカテゴリのイラストにフォールバックする。記事ごとに固定で割り当てる（slug のハッシュ）。
+let PHOTO_CACHE = null;
+function photosFor(slug) {
+  if (!PHOTO_CACHE) {
+    PHOTO_CACHE = {};
+    if (fs.existsSync(ASSETS_DIR)) {
+      for (const f of fs.readdirSync(ASSETS_DIR).sort()) {
+        const m = /^photo-([a-z0-9]+)-\d+\.(jpe?g|webp|png)$/.exec(f);
+        if (m) (PHOTO_CACHE[m[1]] ||= []).push(`/assets/${f}`);
+      }
+    }
+  }
+  return PHOTO_CACHE[slug] || [];
+}
+function hashStr(s) {
+  let h = 0;
+  for (const ch of s) h = (h * 31 + ch.codePointAt(0)) >>> 0;
+  return h;
+}
+// カテゴリ内で同じ写真が続かないよう、記事を公開日順に並べて順番に割り当てる
+const THUMB_ASSIGN = new Map();
+function assignThumbs(articles) {
+  const byCat = {};
+  for (const a of articles) (byCat[a.category.slug] ||= []).push(a);
+  for (const [slug, list] of Object.entries(byCat)) {
+    const photos = photosFor(slug);
+    if (!photos.length) continue;
+    list
+      .sort((x, y) => (x.published < y.published ? 1 : x.published > y.published ? -1 : x.slug < y.slug ? -1 : 1))
+      .forEach((a, i) => THUMB_ASSIGN.set(a.slug, photos[i % photos.length]));
+  }
+}
+function thumbFor(a) {
+  if (THUMB_ASSIGN.has(a.slug)) return THUMB_ASSIGN.get(a.slug);
+  const list = photosFor(a.category.slug);
+  return list.length ? list[hashStr(a.slug) % list.length] : catImage(a.category.slug);
+}
+
+// 「何が」「どこで」見られるかをサムネに出すためのラベル。
+// 記事のタイトル・説明文に実際に書かれている名前だけを拾う（新しい事実は足さない）。
+const WATCH_WORDS = ['Jリーグ', '天皇杯', '日本シリーズ', 'プロ野球', 'パ・リーグ', 'ボクシング', 'RIZIN', 'UFC', '音楽ライブ', 'フェス', '見逃し', 'サッカー', 'スポーツ'];
+const SERVICES = [
+  ['DAZN', /DAZN/],
+  ['ABEMA', /ABEMA/],
+  ['U-NEXT', /U-NEXT/],
+  ['Hulu', /Hulu/],
+  ['WOWOW', /WOWOW/],
+  ['スカパー！', /スカパー/],
+  ['J SPORTS', /J SPORTS/],
+  ['パ・リーグTV', /パ・リーグTV/],
+  ['Lemino', /Lemino/],
+  ['TVer', /TVer/],
+  ['DMM TV', /DMM TV/],
+  ['NHK', /NHK/],
+];
+function watchLabels(a) {
+  const found = WATCH_WORDS.filter((w) => a.title.includes(w));
+  // 「サッカー」「スポーツ」は、より具体的な語があればそちらを出す
+  const specific = found.filter((w) => w !== 'サッカー' && w !== 'スポーツ');
+  return (specific.length ? specific : found).slice(0, 2);
+}
+function servicesOf(a) {
+  const text = `${a.title} ${a.description}`;
+  return SERVICES.map(([name, re]) => {
+    const m = re.exec(text);
+    return m ? { name, at: m.index } : null;
+  })
+    .filter(Boolean)
+    .sort((x, y) => x.at - y.at)
+    .slice(0, 4)
+    .map((x) => x.name);
+}
+function serviceChips(a) {
+  const list = servicesOf(a);
+  return list.length
+    ? `<span class="svc"><span class="svc__label">配信先</span>${list.map((s) => `<span class="svc__chip">${esc(s)}</span>`).join('')}</span>`
+    : '';
+}
+
 function absUrl(site, p) {
   return `${site.baseUrl}${p}`;
 }
@@ -838,17 +918,29 @@ function header(site, current = '') {
         }>${catGlyph(c.slug)}<span>${esc(c.name)}</span></a>`
     )
     .join('\n        ');
+  const topLinks = [
+    { label: '新着記事', href: '/#new' },
+    { label: '無料で見る', href: '/search/?q=無料' },
+    { label: '見逃し配信', href: '/entertainment/' },
+    { label: 'サービス比較', href: '/compare/' },
+    ...site.nav,
+  ]
+    .map((n) => `<a href="${attr(n.href)}">${esc(n.label)}</a>`)
+    .join('');
   return `<header class="site-header" data-header>
+  <div class="topbar">
+    <div class="wrap wrap--wide topbar__inner">${topLinks}</div>
+  </div>
   <div class="wrap wrap--wide site-header__bar">
     <a class="brand" href="/">
-      <img class="brand__logo" src="/assets/logo.svg" width="36" height="36" alt="">
-      <span class="brand__text"><span class="brand__name">${esc(site.name)}</span><span class="brand__sub">試合・番組の「どこで見る？」がわかる</span></span>
+      <img class="brand__logo" src="/assets/logo.svg" width="38" height="38" alt="">
+      <span class="brand__text"><span class="brand__name">${esc(site.name)}</span><span class="brand__sub">あなたの見たいが叶う</span></span>
     </a>
     <form class="searchbox" action="/search/" method="get" role="search">
       <label class="visually-hidden" for="q">サイト内検索</label>
       <svg class="searchbox__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg>
-      <input type="search" id="q" name="q" placeholder="例: Jリーグ 配信" autocomplete="off">
-      <button type="submit">検索</button>
+      <input type="search" id="q" name="q" placeholder="試合名・番組名・サービス名で探す（例: Jリーグ 配信）" autocomplete="off">
+      <button type="submit" aria-label="検索"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="10.5" cy="10.5" r="6.5"/><path d="M15.5 15.5L20 20"/></svg></button>
     </form>
   </div>
   <nav class="catbar" aria-label="カテゴリ">
@@ -988,11 +1080,12 @@ function articleCard(a, opts = {}) {
   const dateLabel = opts.showUpdated === false ? '' :
     `<p class="card__meta"><time datetime="${attr(a.updated)}">${jpDate(a.updated)}</time> 更新</p>`;
   return `<li class="card reveal${opts.featured ? ' card--featured' : ''}" style="--cat:${catTheme(a.category.slug).color}">
-  <a class="card__thumb" href="${attr(a.url)}" tabindex="-1" aria-hidden="true"><img src="${catImage(a.category.slug)}" alt="" loading="lazy" width="640" height="320"></a>
+  <a class="card__thumb" href="${attr(a.url)}" tabindex="-1" aria-hidden="true"><img src="${thumbFor(a)}" alt="" loading="lazy" width="640" height="320"></a>
   <div class="card__body">
     <p class="card__cat"><a href="/${a.category.slug}/">${catGlyph(a.category.slug)}${esc(a.category.name)}</a></p>
     <h3 class="card__title"><a href="${attr(a.url)}">${esc(a.title)}</a></h3>
     <p class="card__desc">${esc(a.description)}</p>
+    ${serviceChips(a)}
     ${dateLabel}
   </div>
 </li>`;
@@ -1048,36 +1141,92 @@ function buildHome(site, articles) {
 </div>`
     : '';
 
-  const [first, ...rest] = byPublished.slice(0, site.homeLatestCount);
-  const latest = first
-    ? [articleCard(first, { featured: true }), ...rest.map((a) => articleCard(a))].join('\n')
-    : '';
-  const updated = byUpdated.slice(0, site.homeUpdatedCount).map((a) => articleCard(a)).join('\n');
-
-  const main = `<section class="hero">
-  <div class="hero__bg" aria-hidden="true"><span></span><span></span><span></span></div>
-  <div class="wrap wrap--wide hero__inner">
-    <div class="hero__text">
-      <p class="hero__eyebrow"><span class="hero__dot" aria-hidden="true"></span>スポーツ・エンタメの配信ガイド</p>
-      <h1 class="hero__title">その試合、<br><span class="hero__accent">どこで見られる？</span></h1>
-      <p class="hero__tagline">${esc(site.tagline || site.description || '')}</p>
-      <div class="hero__cta">
-        <a class="btn btn--primary" href="/compare/">配信サービスを比べる<span aria-hidden="true">→</span></a>
-        <a class="btn btn--ghost" href="/search/?q=無料">無料で見る方法</a>
+  // ---- プレビュー（自動で切り替わる大バナー）: 新しい順に5本 ----
+  const slides = byPublished.slice(0, 5);
+  const slidesHtml = slides
+    .map(
+      (a, i) => `<li class="preview__slide${i === 0 ? ' is-active' : ''}" style="--cat:${catTheme(a.category.slug).color}"${i === 0 ? '' : ' aria-hidden="true"'}>
+      <img class="preview__img" src="${thumbFor(a)}" alt="" width="1280" height="720"${i === 0 ? '' : ' loading="lazy"'}>
+      <div class="preview__shade"></div>
+      <div class="wrap wrap--wide preview__info">
+        <p class="preview__cat">${catGlyph(a.category.slug)}${esc(watchLabels(a)[0] || a.category.name)}</p>
+        <p class="preview__title"><a href="${attr(a.url)}"${i === 0 ? '' : ' tabindex="-1"'}>${esc(a.title)}</a></p>
+        <p class="preview__desc">${esc(a.description)}</p>
+        ${servicesOf(a).length ? `<p class="preview__where"><span>取り上げている配信先</span>${servicesOf(a).map((s) => `<b>${esc(s)}</b>`).join('')}</p>` : ''}
+        <a class="btn btn--primary" href="${attr(a.url)}"${i === 0 ? '' : ' tabindex="-1"'}>記事を見る<span aria-hidden="true">→</span></a>
       </div>
-      <ul class="hero__stats">
-        <li><strong>${articles.length}</strong><span>本の視聴ガイド</span></li>
-        <li><strong>${site.categories.length}</strong><span>ジャンル</span></li>
-        <li><strong>公式</strong><span>ページで確認</span></li>
-      </ul>
-      <p class="hero__note">${esc(site.adDisclosure)}</p>
+    </li>`
+    )
+    .join('\n    ');
+  const dots = slides
+    .map((a, i) => `<button type="button" class="preview__dot${i === 0 ? ' is-active' : ''}" data-go="${i}" aria-label="${i + 1}枚目: ${attr(a.title)}"><span></span></button>`)
+    .join('');
+
+  // ---- ジャンルごとの横一列（配信サービス風） ----
+  const newest = byPublished[0] ? Date.parse(byPublished[0].published) : 0;
+  const isNew = (a) => newest && (newest - Date.parse(a.published)) / 86400000 <= 10;
+  const tile = (a) => `<li class="tile">
+  <a href="${attr(a.url)}">
+    <span class="tile__img"><img src="${thumbFor(a)}" alt="" loading="lazy" width="640" height="360"></span>
+    ${isNew(a) ? '<span class="tile__badge">NEW</span>' : ''}
+    <span class="tile__cat" style="--cat:${catTheme(a.category.slug).color}">${catGlyph(a.category.slug)}${esc(watchLabels(a)[0] || a.category.name)}</span>
+    <span class="tile__title">${esc(a.title)}</span>
+    ${serviceChips(a)}
+    <span class="tile__meta"><time datetime="${attr(a.updated)}">${jpDate(a.updated)}</time> 更新</span>
+  </a>
+</li>`;
+  const row = (id, titleHtml, list, moreHref, moreLabel = '全てを見る') =>
+    list.length
+      ? `<section class="row"${id ? ` id="${id}"` : ''}>
+  <div class="wrap wrap--wide">
+    <div class="row__bar">
+      <h2 class="row__title">${titleHtml}</h2>
+      ${moreHref ? `<a class="row__more" href="${attr(moreHref)}">${esc(moreLabel)}</a>` : ''}
     </div>
-    <div class="hero__art">
-      <img src="/assets/hero.svg" alt="" width="560" height="440">
+    <div class="row__viewport">
+      <button type="button" class="row__nav row__nav--prev" aria-label="前へ" data-dir="-1">‹</button>
+      <ul class="row__track">
+${list.map(tile).join('\n')}
+      </ul>
+      <button type="button" class="row__nav row__nav--next" aria-label="次へ" data-dir="1">›</button>
+    </div>
+  </div>
+</section>`
+      : '';
+
+  const rows = [
+    row('new', '<span class="row__icon row__icon--new" aria-hidden="true"></span>新着の視聴ガイド', byPublished.slice(0, site.homeLatestCount), '/search/', '検索で探す'),
+    ...site.categories.map((c) =>
+      row(
+        '',
+        `<span class="row__icon" style="--cat:${catTheme(c.slug).color}">${catGlyph(c.slug)}</span>${esc(c.name)}`,
+        byUpdated.filter((a) => a.category.slug === c.slug),
+        `/${c.slug}/`
+      )
+    ),
+    row('', '<span class="row__icon row__icon--upd" aria-hidden="true"></span>最近更新した記事', byUpdated.slice(0, site.homeUpdatedCount), ''),
+  ].join('\n\n');
+
+  const main = `<section class="hero" aria-label="みるまど">
+  <div class="preview" data-preview>
+    <ul class="preview__slides">
+    ${slidesHtml}
+    </ul>
+    <div class="wrap wrap--wide preview__brand">
+      <h1 class="hero__brandname">${esc(site.name)}</h1>
+      <p class="hero__catch">あなたの見たいが叶う</p>
+    </div>
+    <div class="wrap wrap--wide preview__controls">
+      <div class="preview__dots">${dots}</div>
+      <button type="button" class="preview__pause" aria-label="自動切り替えを一時停止" aria-pressed="false"><span></span></button>
     </div>
   </div>
   ${marquee}
 </section>
+
+<p class="wrap wrap--wide home-pr">${esc(site.adDisclosure)}</p>
+
+${rows}
 
 <section class="section">
   <div class="wrap wrap--wide">
@@ -1087,18 +1236,6 @@ function buildHome(site, articles) {
     </div>
     <ul class="entry-points">
 ${entryPoints}
-    </ul>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap wrap--wide">
-    <div class="section__head">
-      <p class="section__eyebrow">CATEGORY</p>
-      <h2>ジャンルから探す</h2>
-    </div>
-    <ul class="cat-cards">
-${cats}
     </ul>
   </div>
 </section>
@@ -1115,26 +1252,6 @@ ${cats}
       <li class="step reveal"><span class="step__num">3</span><h3>公式で条件を見て申し込む</h3><p>無料期間や支払い方法は変わることがあるので、最後は公式サイトで確認します。</p></li>
     </ol>
     <p class="steps__cta"><a class="btn btn--primary" href="/compare/">まずはサービス比較から<span aria-hidden="true">→</span></a></p>
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap wrap--wide">
-    <div class="section__head">
-      <p class="section__eyebrow">NEW</p>
-      <h2>新着記事</h2>
-    </div>
-    ${latest ? `<ul class="cards cards--grid">\n${latest}\n</ul>` : '<p class="empty">まだ記事がありません。</p>'}
-  </div>
-</section>
-
-<section class="section">
-  <div class="wrap wrap--wide">
-    <div class="section__head">
-      <p class="section__eyebrow">UPDATED</p>
-      <h2>最近更新した記事</h2>
-    </div>
-    ${updated ? `<ul class="cards cards--rail">\n${updated}\n</ul>` : '<p class="empty">まだ記事がありません。</p>'}
   </div>
 </section>
 
@@ -1240,7 +1357,7 @@ ${related.map((r) => articleCard(r)).join('\n')}
 
   const isUpdated = a.updated !== a.published;
 
-  const main = `<div class="article-banner" style="--cat:${catTheme(a.category.slug).color}" aria-hidden="true"><img src="${catImage(a.category.slug)}" alt="" width="640" height="320"></div>
+  const main = `<div class="article-banner" style="--cat:${catTheme(a.category.slug).color}" aria-hidden="true"><img src="${thumbFor(a)}" alt="" width="640" height="320"></div>
 <div class="wrap">
 ${breadcrumb(crumbs)}
 
@@ -1726,6 +1843,7 @@ function buildSearchIndex(articles) {
       url: a.url,
       updated: a.updated,
       excerpt: a.plainText.slice(0, 300),
+      thumb: thumbFor(a),
     })),
     null,
     0
@@ -1907,6 +2025,7 @@ function main() {
 
   const site = loadSite();
   const articles = loadArticles(site, stats);
+  assignThumbs(articles);
 
   rmrf(DIST);
   fs.mkdirSync(DIST, { recursive: true });

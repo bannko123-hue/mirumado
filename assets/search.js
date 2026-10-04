@@ -95,7 +95,7 @@
       var a = list[i];
       html +=
         '<li class="card">' +
-        '<a class="card__thumb" href="' + escapeHtml(a.url) + '" tabindex="-1" aria-hidden="true"><img src="/assets/cat-' + escapeHtml(a.categorySlug) + '.svg" alt="" loading="lazy" width="640" height="320"></a>' +
+        '<a class="card__thumb" href="' + escapeHtml(a.url) + '" tabindex="-1" aria-hidden="true"><img src="' + escapeHtml(a.thumb || ('/assets/cat-' + a.categorySlug + '.svg')) + '" alt="" loading="lazy" width="640" height="320"></a>' +
         '<div class="card__body">' +
         '<p class="card__cat"><a href="/' + escapeHtml(a.categorySlug) + '/">' + escapeHtml(a.category) + '</a></p>' +
         '<h3 class="card__title"><a href="' + escapeHtml(a.url) + '">' + highlight(a.title, ts) + '</a></h3>' +
