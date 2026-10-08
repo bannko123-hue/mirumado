@@ -1017,7 +1017,7 @@ function layout(site, opts) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(fullTitle)}</title>
 <meta name="description" content="${attr(description)}">
-<link rel="canonical" href="${attr(canonical)}">
+${site.googleSiteVerification ? `<meta name="google-site-verification" content="${attr(site.googleSiteVerification)}">\n` : ''}<link rel="canonical" href="${attr(canonical)}">
 <meta property="og:title" content="${attr(fullTitle)}">
 <meta property="og:description" content="${attr(description)}">
 <meta property="og:type" content="${attr(ogType)}">
